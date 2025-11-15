@@ -4,6 +4,10 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Id } from "../../../../convex/_generated/dataModel";
+
+const categories = ["students", "housewives", "professionals"] as const;
+type Category = (typeof categories)[number];
 
 export default function AdminHome() {
   return (
@@ -27,7 +31,7 @@ function CreatePlanForm() {
   const router = useRouter();
   const mutate = useMutation(api.admin.createPlan);
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState<"students" | "housewives" | "professionals">("students");
+  const [category, setCategory] = useState<Category>("students");
   const [submitting, setSubmitting] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
@@ -50,7 +54,7 @@ function CreatePlanForm() {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <select className="rounded border px-3 py-2" value={category} onChange={(e) => setCategory(e.target.value as any)}>
+      <select className="rounded border px-3 py-2" value={category} onChange={(e) => setCategory(e.target.value as Category)}>
         <option value="students">Students</option>
         <option value="housewives">Housewives</option>
         <option value="professionals">Professionals</option>
@@ -100,7 +104,7 @@ function PlansTable() {
               <td className="px-3 py-2 space-x-2">
                 <a className="underline" href={`/admin/plans/${p._id}`}>Edit</a>
                 <button
-                  onClick={() => setPublished({ planId: p._id as any, published: !p.published })}
+                  onClick={() => setPublished({ planId: p._id as Id<"plans">, published: !p.published })}
                   className="rounded border px-2 py-1"
                 >
                   {p.published ? "Unpublish" : "Publish"}

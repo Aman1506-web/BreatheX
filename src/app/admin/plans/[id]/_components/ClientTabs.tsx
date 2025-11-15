@@ -4,13 +4,15 @@ import { useState } from "react";
 import OutlineEditor from "./OutlineEditor";
 import DayEditor from "./DayEditor";
 import MetaEditor from "./MetaEditor";
+import { Outline } from "@/types/plans";
+import { Id } from "@/../convex/_generated/dataModel";
 
 export default function ClientTabs({
   planId,
   initialOutline,
 }: {
-  planId: string;
-  initialOutline: any;
+  planId: Id<"plans">;
+  initialOutline: Outline | null;
 }) {
   const [activeTab, setActiveTab] = useState<"meta" | "outline" | "day">(
     "meta"
