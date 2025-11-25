@@ -1,4 +1,3 @@
-
 import CommunityCollage from "@/components/CommunityCollage";
 import Footer from "@/components/Footer";
 import GenXAISection from "@/components/GenXAISection";
@@ -12,23 +11,21 @@ import OurPhilosophy from "@/components/OurPhilosophy";
 import ProductCardSection from "@/components/ProductCardSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 
-
 export default function Home() {
   return (
     <main>
       <HeroCarousel />
-      <OurPhilosophy/>
-      <GenXAISection/>
-      <BuiltToEndureBanner/>
-      <ProductCardSection/>
-      <LimitlessSection/>
-      <LaunchingProtein/>
-      <TestimonialsSection/>
-      <CommunityCollage/> 
-      <GenXBlogs/>
-      <MovingCommunityStrip/>
-      <Footer/>
+      <OurPhilosophy />
+      <GenXAISection />
+      <BuiltToEndureBanner />
+      <ProductCardSection />
+      <LimitlessSection />
+      <LaunchingProtein />
+      <TestimonialsSection />
+      <CommunityCollage />
+      <GenXBlogs />
+      <MovingCommunityStrip />
+      <Footer />
     </main>
   );
 }
-
