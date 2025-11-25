@@ -5,9 +5,7 @@ import { api } from "@/../convex/_generated/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Id } from "../../../../convex/_generated/dataModel";
-
-const categories = ["students", "housewives", "professionals"] as const;
-type Category = (typeof categories)[number];
+import { Category } from "@/types/plans";
 
 export default function AdminHome() {
   return (
@@ -54,7 +52,11 @@ function CreatePlanForm() {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <select className="rounded border px-3 py-2" value={category} onChange={(e) => setCategory(e.target.value as Category)}>
+      <select
+        className="rounded border px-3 py-2"
+        value={category}
+        onChange={(e) => setCategory(e.target.value as Category)}
+      >
         <option value="students">Students</option>
         <option value="housewives">Housewives</option>
         <option value="professionals">Professionals</option>
@@ -66,7 +68,9 @@ function CreatePlanForm() {
       >
         {submitting ? "Creating..." : "Create"}
       </button>
-      <p className="text-xs text-neutral-500">Defaults: 4 weeks • 4 workouts/week • 30 mins • published = false</p>
+      <p className="text-xs text-neutral-500">
+        Defaults: 4 weeks • 4 workouts/week • 30 mins • published = false
+      </p>
     </form>
   );
 }
@@ -76,7 +80,8 @@ function PlansTable() {
   const setPublished = useMutation(api.admin.setPublished);
 
   if (!rows) return <div className="text-sm text-neutral-500">Loading…</div>;
-  if (rows.length === 0) return <div className="text-sm text-neutral-600">No plans yet.</div>;
+  if (rows.length === 0)
+    return <div className="text-sm text-neutral-600">No plans yet.</div>;
 
   return (
     <div className="overflow-x-auto">
@@ -100,11 +105,20 @@ function PlansTable() {
               <td className="px-3 py-2">{p.durationWeeks}</td>
               <td className="px-3 py-2">{p.workoutsPerWeek}</td>
               <td className="px-3 py-2">{p.minutesPerWorkout}</td>
-              <td className="px-3 py-2">{p.published ? "Published" : "Draft"}</td>
+              <td className="px-3 py-2">
+                {p.published ? "Published" : "Draft"}
+              </td>
               <td className="px-3 py-2 space-x-2">
-                <a className="underline" href={`/admin/plans/${p._id}`}>Edit</a>
+                <a className="underline" href={`/admin/plans/${p._id}`}>
+                  Edit
+                </a>
                 <button
-                  onClick={() => setPublished({ planId: p._id as Id<"plans">, published: !p.published })}
+                  onClick={() =>
+                    setPublished({
+                      planId: p._id as Id<"plans">,
+                      published: !p.published,
+                    })
+                  }
                   className="rounded border px-2 py-1"
                 >
                   {p.published ? "Unpublish" : "Publish"}
