@@ -4,29 +4,41 @@ import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import Link from "next/link";
+import { Id } from "@/../convex/_generated/dataModel";
+import type { PlanDay, PlanDayBlock } from "@/types/plans";
 
-export default function DayEditor({ planId }: { planId: string }) {
+export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
   const [week, setWeek] = useState(1);
   const [day, setDay] = useState(1);
 
-  const dayData = useQuery(api.admin.getDay, { planId: planId as any, weekIndex: week, dayIndex: day });
+  const dayData = useQuery(api.admin.getDay, { planId: planId as Id<"plans">, weekIndex: week, dayIndex: day }) as PlanDay | null;
   const saveDay = useMutation(api.admin.upsertDay);
   const duplicateDay = useMutation(api.admin.duplicateDay);
   const applyDayToAllWeeks = useMutation(api.admin.applyDayToAllWeeks);
 
   const [title, setTitle] = useState("");
   const [focus, setFocus] = useState("");
-  const [blocks, setBlocks] = useState<any[]>([]);
+  const [blocks, setBlocks] = useState<PlanDayBlock[]>([]);
 
   // Sync fetched data → local state
   if (dayData && blocks.length === 0 && dayData.blocks) {
-    setTitle(dayData.title);
-    setFocus(dayData.focus);
-    setBlocks(dayData.blocks);
+    setTitle(dayData.title ?? "");
+    setFocus(dayData.focus ?? "");
+    setBlocks(
+      dayData.blocks.map((block) => ({
+        ...block,
+        items: block.items.map((item) => ({
+          ...item,
+          sets: item.sets ?? 0,
+          repsOrTime: item.repsOrTime ?? "",
+          notes: item.notes ?? "",
+        })),
+      }))
+    );
   }
 
   async function handleSave() {
-    await saveDay({ planId: planId as any, weekIndex: week, dayIndex: day, title, focus, blocks });
+    await saveDay({ planId: planId as Id<"plans">, weekIndex: week, dayIndex: day, title, focus, blocks });
     alert("Saved ✅");
   }
 
@@ -87,7 +99,7 @@ export default function DayEditor({ planId }: { planId: string }) {
             </button>
 
             <div className="space-y-2">
-              {b.items.map((it: any, j: number) => (
+              {b.items.map((it, j) => (
                 <div key={j} className="flex gap-2 text-sm">
                   <input
                     placeholder="Exercise"
@@ -101,20 +113,22 @@ export default function DayEditor({ planId }: { planId: string }) {
                   />
                   <input
                     placeholder="Sets"
-                    value={it.sets}
+                    value={Number.isNaN(it.sets) ? "" : it.sets}
                     onChange={(e) => {
                       const newBlocks = [...blocks];
-                      newBlocks[i].items[j].sets = e.target.value;
+                      const val = e.target.value;
+                      const num = Number(val);
+                      newBlocks[i].items[j].sets = Number.isNaN(num) ? 0 : num;
                       setBlocks(newBlocks);
                     }}
                     className="w-16 border rounded px-2 py-1"
                   />
                   <input
                     placeholder="Reps/Time"
-                    value={it.reps}
+                    value={it.repsOrTime ?? ""}
                     onChange={(e) => {
                       const newBlocks = [...blocks];
-                      newBlocks[i].items[j].reps = e.target.value;
+                      newBlocks[i].items[j].repsOrTime = e.target.value;
                       setBlocks(newBlocks);
                     }}
                     className="w-24 border rounded px-2 py-1"
@@ -125,7 +139,7 @@ export default function DayEditor({ planId }: { planId: string }) {
                 className="text-xs text-blue-500"
                 onClick={() => {
                   const newBlocks = [...blocks];
-                  newBlocks[i].items.push({ name: "", sets: "", reps: "" });
+                  newBlocks[i].items.push({ name: "", sets: 0, repsOrTime: "", notes: "" });
                   setBlocks(newBlocks);
                 }}
               >
@@ -154,13 +168,13 @@ export default function DayEditor({ planId }: { planId: string }) {
           Save
         </button>
         <button
-          onClick={() => duplicateDay({ planId: planId as any, srcWeek: week, srcDay: day, destWeek: week + 1, destDay: day })}
+          onClick={() => duplicateDay({ planId: planId as Id<"plans">, srcWeek: week, srcDay: day, destWeek: week + 1, destDay: day })}
           className="rounded border px-4 py-2"
         >
           Duplicate to Next Week
         </button>
         <button
-          onClick={() => applyDayToAllWeeks({ planId: planId as any, srcWeek: week, dayIndex: day })}
+          onClick={() => applyDayToAllWeeks({ planId: planId as Id<"plans">, srcWeek: week, dayIndex: day })}
           className="rounded border px-4 py-2"
         >
           Apply to All Weeks

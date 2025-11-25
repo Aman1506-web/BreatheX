@@ -10,8 +10,8 @@ export type Outline = {
 
 export type PlanDayItem = {
   name: string;
-  sets?: number;
-  repsOrTime?: string;
+  sets: number;
+  repsOrTime: string;
   notes?: string;
 };
 
@@ -25,3 +25,7 @@ export type PlanDay = {
   focus?: string;
   blocks: PlanDayBlock[];
 };
+
+export const categories = ["students", "housewives", "professionals"] as const;
+
+export type Category = (typeof categories)[number];

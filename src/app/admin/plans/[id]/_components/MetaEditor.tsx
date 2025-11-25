@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/../convex/_generated/api";
+import { Id } from "../../../../../../convex/_generated/dataModel";
+import { Category } from "@/types/plans";
 
 export default function MetaEditor({ planId }: { planId: string }) {
-  const plan = useQuery(api.plans.getPlanById, { planId: planId as any });
+  const plan = useQuery(api.plans.getPlanById, { planId: planId as Id<"plans"> });
   const updatePlanMeta = useMutation(api.admin.updatePlanMeta);
 
   const [title, setTitle] = useState("");
@@ -15,7 +17,7 @@ export default function MetaEditor({ planId }: { planId: string }) {
   const [workoutsPerWeek, setWorkoutsPerWeek] = useState(4);
   const [minutesPerWorkout, setMinutesPerWorkout] = useState(30);
   const [description, setDescription] = useState(""); // long description
-  const [category, setCategory] = useState<"students" | "housewives" | "professionals">("students");
+  const [category, setCategory] = useState<Category>("students");
 
   const [saving, setSaving] = useState(false);
 
@@ -37,7 +39,7 @@ export default function MetaEditor({ planId }: { planId: string }) {
     setSaving(true);
     try {
       await updatePlanMeta({
-        planId: planId as any,
+        planId: planId as Id<"plans">,
         patch: {
           title,
           subtext,
@@ -102,7 +104,7 @@ export default function MetaEditor({ planId }: { planId: string }) {
         <select
           className="w-full border rounded px-3 py-2"
           value={category}
-          onChange={(e) => setCategory(e.target.value as any)}
+          onChange={(e) => setCategory(e.target.value as Category)}
         >
           <option value="students">Students</option>
           <option value="housewives">Housewives</option>
