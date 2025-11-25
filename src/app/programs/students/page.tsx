@@ -2,7 +2,6 @@
 import ProgramsHero from "@/components/programs/ProgramsHero";
 import InfoAlert from "@/components/programs/InfoAlert";
 import PillarsInfoGrid from "@/components/programs/PillarsInfoGrid";
-import ExploreTabs from "@/components/programs/ExploreTabs";
 
 import {
   Dumbbell,
@@ -17,6 +16,7 @@ import Link from "next/link";
 import { fetchQuery } from "convex/nextjs";
 // NOTE: relative path from src/app/programs/students → project root /convex
 import { api } from "../../../../convex/_generated/api";
+import Image from "next/image";
 
 export default async function StudentsPage() {
   const plans = await fetchQuery(api.plans.getPlansByCategory, {
@@ -67,13 +67,16 @@ export default async function StudentsPage() {
                 href={`/programs/students/plans/${p.slug}`}
                 className="rounded-2xl border bg-white overflow-hidden hover:shadow-sm transition"
               >
-                <div className="aspect-[16/9] bg-neutral-200">
-                  <img
-                    src={p.heroImage}
+                <div className="aspect-[16/9] bg-neutral-200 relative">
+                  <Image
+                    src={p.heroImage || "/placeholder.jpg"}
                     alt={p.title}
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                   />
                 </div>
+
                 <div className="p-4">
                   <h3 className="text-lg font-medium">{p.title}</h3>
                   <p className="text-sm text-neutral-500">

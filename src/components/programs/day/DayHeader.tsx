@@ -1,6 +1,6 @@
 "use client";
 
-import { Dumbbell, Timer, Info, PackageOpen } from "lucide-react";
+import { Timer, Info, PackageOpen } from "lucide-react";
 import type { DayMeta } from "./types";
 
 export default function DayHeader({ meta }: { meta: DayMeta }) {

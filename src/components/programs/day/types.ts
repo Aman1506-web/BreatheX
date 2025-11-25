@@ -18,7 +18,7 @@ export type DayBlock =
 export type DayMeta = {
   dayTitle: string;           // "Week 1 • Day 1"
   planTitle: string;          // "Muscle Gain • Beginner"
-  focus: string;              // "Push 1 — Chest/Shoulders/Triceps"
+  focus: string | undefined;              // "Push 1 — Chest/Shoulders/Triceps"
   duration: string;           // "30 mins"
   equipment?: string;         // "Bodyweight + optional DBs"
 };
