@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { PRODUCTS } from "@/constants/everydayData"; // ⬅️ Import here
+import { PRODUCTS, type ProductCategory } from "@/constants/everydayData"; // Import here
 
 export default function LimitlessSection() {
-  const categories = Object.keys(PRODUCTS);
-  const [selectedCategory, setSelectedCategory] = useState("Men");
+  const categories = Object.keys(PRODUCTS) as ProductCategory[];
+  const [selectedCategory, setSelectedCategory] = useState<ProductCategory>("Men");
 
   return (
     <section className="bg-white py-1 px-4">

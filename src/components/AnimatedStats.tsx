@@ -13,13 +13,13 @@ export default function AnimatedStats() {
   const containerRef = useRef<HTMLDivElement>(null); // For GSAP context
 
   useLayoutEffect(() => {
-    let ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {
       const animateCount = (
-        ref: React.RefObject<HTMLSpanElement>,
+        ref: React.RefObject<HTMLSpanElement | null>,
         end: number,
         suffix = ""
       ) => {
-        let obj = { val: 0 };
+        const obj = { val: 0 };
         gsap.to(obj, {
           val: end,
           duration: 2,

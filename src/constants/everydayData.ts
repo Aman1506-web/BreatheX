@@ -70,4 +70,7 @@ export const PRODUCTS = {
       discount: "25% OFF",
     },
   ],
-};
+} as const;
+
+export type ProductCategory = keyof typeof PRODUCTS;
+export type Product = (typeof PRODUCTS)[ProductCategory][number];

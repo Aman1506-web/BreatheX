@@ -34,7 +34,7 @@ export default function HeroCarousel() {
 
   // toggle slides variables
   const [currentSlide, setCurrentSlide] = useState(0);
-  const slide = slides[currentSlide];
+  // const slide = slides[currentSlide];
 
   // for auto play pause
   const [isPlaying, setIsPlaying] = useState<boolean>(true);

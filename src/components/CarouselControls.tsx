@@ -1,4 +1,6 @@
 import { Play, Pause, ChevronLeft, ChevronRight } from "lucide-react";
+import type { Dispatch, SetStateAction } from "react";
+
 
 export default function CarouselControls({
   isPlaying,
@@ -9,7 +11,7 @@ export default function CarouselControls({
   setProgressKey,
 }: {
   isPlaying: boolean;
-  setIsPlaying: (v: boolean) => void;
+  setIsPlaying: Dispatch<SetStateAction<boolean>>; // proper typre for setter function
   prevSlide: () => void;
   nextSlide: () => void;
   progressKey: number; // key to force re-animation
