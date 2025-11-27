@@ -1,9 +1,9 @@
 // src/components/programs/ProgramsHeroTriptych.tsx
-// src/components/programs/ProgramsHeroTriptych.tsx
 "use client";
 
 import * as React from "react";
 import clsx from "clsx";
+import Image from "next/image";
 
 type Portrait = { src?: string; alt: string };
 
@@ -32,9 +32,9 @@ export default function ProgramsHeroTriptych({
   decorGlows = false,
 }: Props) {
   const styleVars = {
-    ["--vh-base" as any]: `${minHeightVH.base ?? 60}vh`,
-    ["--vh-md" as any]: `${minHeightVH.md ?? minHeightVH.base ?? 60}vh`,
-    ["--vh-lg" as any]: `${minHeightVH.lg ?? minHeightVH.md ?? minHeightVH.base ?? 60}vh`,
+    "--vh-base": `${minHeightVH.base ?? 60}vh`,
+    "--vh-md": `${minHeightVH.md ?? minHeightVH.base ?? 60}vh`,
+    "--vh-lg": `${minHeightVH.lg ?? minHeightVH.md ?? minHeightVH.base ?? 60}vh`,
   };
 
   return (
@@ -88,7 +88,11 @@ export default function ProgramsHeroTriptych({
           {/* desktop/tablet */}
           <div className="hidden sm:grid grid-cols-3 gap-6">
             {portraits.map((p, i) => (
-              <PortraitCard key={i} src={placeholder ? undefined : p.src} alt={p.alt} />
+              <PortraitCard
+                key={i}
+                src={placeholder ? undefined : p.src}
+                alt={p.alt}
+              />
             ))}
           </div>
 
@@ -96,7 +100,12 @@ export default function ProgramsHeroTriptych({
           <div className="sm:hidden overflow-x-auto no-scrollbar">
             <div className="flex gap-3 pr-4">
               {portraits.map((p, i) => (
-                <PortraitCard key={i} src={placeholder ? undefined : p.src} alt={p.alt} mobile />
+                <PortraitCard
+                  key={i}
+                  src={placeholder ? undefined : p.src}
+                  alt={p.alt}
+                  mobile
+                />
               ))}
             </div>
           </div>
@@ -105,9 +114,19 @@ export default function ProgramsHeroTriptych({
 
       {/* Height control via CSS vars */}
       <style jsx>{`
-        section { min-height: var(--vh-base); }
-        @media (min-width: 768px) { section { min-height: var(--vh-md); } }
-        @media (min-width: 1024px) { section { min-height: var(--vh-lg); } }
+        section {
+          min-height: var(--vh-base);
+        }
+        @media (min-width: 768px) {
+          section {
+            min-height: var(--vh-md);
+          }
+        }
+        @media (min-width: 1024px) {
+          section {
+            min-height: var(--vh-lg);
+          }
+        }
       `}</style>
     </section>
   );
@@ -123,9 +142,7 @@ function PortraitCard({
   alt: string;
   mobile?: boolean;
 }) {
-  const wrap = mobile
-    ? "h-[58vh] w-[64vw] min-w-[64vw]"
-    : "h-[64vh] w-full";
+  const wrap = mobile ? "h-[58vh] w-[64vw] min-w-[64vw]" : "h-[64vh] w-full";
 
   return (
     <div
@@ -137,7 +154,13 @@ function PortraitCard({
       )}
     >
       {src ? (
-        <img src={src} alt={alt} className="h-full w-full object-cover" />
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className="object-cover"
+          sizes={mobile ? "80vw" : "33vw"}
+        />
       ) : (
         <div className="h-full w-full bg-neutral-200" aria-label={alt} />
       )}

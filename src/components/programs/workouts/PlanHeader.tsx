@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarRange, Timer, Dumbbell } from "lucide-react";
+import Image from "next/image";
 
 type PlanHeaderProps = {
   title: string;
@@ -24,22 +25,39 @@ export default function PlanHeader({
       {/* IMAGE */}
       <div className="w-full md:w-[260px] md:flex-shrink-0">
         {/* Mobile: full width 4:3 | Desktop: square */}
-        <div className="aspect-[4/3] md:aspect-square w-full rounded-2xl overflow-hidden bg-neutral-200 ring-1 ring-black/10">
+        <div className="aspect-[4/3] md:aspect-square w-full rounded-2xl overflow-hidden bg-neutral-200 ring-1 ring-black/10 relative">
           {imageSrc ? (
-            <img src={imageSrc} alt={title} className="h-full w-full object-cover" />
+            <Image
+              src={imageSrc}
+              alt={title}
+              fill
+              className="object-cover"
+              sizes="(min-width: 768px) 300px, 100vw" // adjust to your layout
+            />
           ) : null}
         </div>
       </div>
 
       {/* TEXT / META */}
       <div className="min-w-0 flex-1">
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">{title}</h1>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          {title}
+        </h1>
         {subtitle && <p className="mt-1 text-neutral-600">{subtitle}</p>}
 
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          <MetaPill icon={<CalendarRange className="h-4 w-4" />} label={`${weeks} weeks`} />
-          <MetaPill icon={<Dumbbell className="h-4 w-4" />} label={`${workoutsPerWeek} workouts / week`} />
-          <MetaPill icon={<Timer className="h-4 w-4" />} label={`${minutesPerWorkout} mins / workout`} />
+          <MetaPill
+            icon={<CalendarRange className="h-4 w-4" />}
+            label={`${weeks} weeks`}
+          />
+          <MetaPill
+            icon={<Dumbbell className="h-4 w-4" />}
+            label={`${workoutsPerWeek} workouts / week`}
+          />
+          <MetaPill
+            icon={<Timer className="h-4 w-4" />}
+            label={`${minutesPerWorkout} mins / workout`}
+          />
         </div>
       </div>
     </section>
