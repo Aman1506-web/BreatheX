@@ -2,7 +2,8 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { requireAdmin } from "./users";
-import type { Doc, Id } from "./_generated/dataModel";
+import type { Doc } from "./_generated/dataModel";
+
 
 /** small helper */
 function slugify(s: string) {
@@ -21,7 +22,7 @@ export const listPlans = query({
     await requireAdmin(ctx);
 
     const rows = category
-      ? await ctx.db.query("plans").withIndex("by_category_slug", (q: any) => q.eq("category", category)).collect()
+      ? await ctx.db.query("plans").withIndex("by_category_slug", (q) => q.eq("category", category)).collect()
       : await ctx.db.query("plans").collect();
 
     const filtered =
@@ -68,7 +69,7 @@ export const createPlan = mutation({
 
     const exists = await ctx.db
       .query("plans")
-      .withIndex("by_category_slug", (q: any) => q.eq("category", args.category).eq("slug", slug))
+      .withIndex("by_category_slug", (q) => q.eq("category", args.category).eq("slug", slug))
       .first();
     if (exists) throw new Error("A plan with this title already exists in this category.");
 
@@ -116,16 +117,33 @@ export const updatePlanMeta = mutation({
     const existing = await ctx.db.get(planId);
     if (!existing) throw new Error("Plan not found");
 
-    const next: any = { ...patch };
+    type PlanPatch = Partial<
+      Pick<
+        Doc<"plans">,
+        | "title"
+        | "subtext"
+        | "heroImage"
+        | "description"
+        | "bullets"
+        | "accessTier"
+        | "category"
+        | "durationWeeks"
+        | "workoutsPerWeek"
+        | "minutesPerWorkout"
+        | "slug"
+      >
+    >;
+
+    const next: PlanPatch = { ...patch };
 
     if (patch.title && !patch.slug) next.slug = slugify(patch.title);
 
     if ((next.slug && next.slug !== existing.slug) || (next.category && next.category !== existing.category)) {
-      const cat = (next.category as any) ?? existing.category;
-      const slg = (next.slug as string) ?? existing.slug;
+      const cat = next.category ?? existing.category;
+      const slg = next.slug ?? existing.slug;
       const collision = await ctx.db
         .query("plans")
-        .withIndex("by_category_slug", (q: any) => q.eq("category", cat).eq("slug", slg))
+        .withIndex("by_category_slug", (q) => q.eq("category", cat).eq("slug", slg))
         .first();
       if (collision && collision._id !== planId) throw new Error("Slug already used in this category.");
     }
@@ -183,7 +201,7 @@ export const generateOutline = mutation({
       })),
     }));
 
-    const existing = await ctx.db.query("plan_outlines").withIndex("by_plan", (q: any) => q.eq("planId", planId)).first();
+    const existing = await ctx.db.query("plan_outlines").withIndex("by_plan", (q) => q.eq("planId", planId)).first();
 
     if (existing) await ctx.db.patch(existing._id, { weeks: weeksArr });
     else await ctx.db.insert("plan_outlines", { planId, weeks: weeksArr });
@@ -204,7 +222,7 @@ export const setDayMeta = mutation({
   handler: async (ctx, { planId, weekIndex, dayIndex, title, meta }) => {
     await requireAdmin(ctx);
 
-    const outline = await ctx.db.query("plan_outlines").withIndex("by_plan", (q: any) => q.eq("planId", planId)).first();
+    const outline = await ctx.db.query("plan_outlines").withIndex("by_plan", (q) => q.eq("planId", planId)).first();
     if (!outline) throw new Error("Outline not found");
 
     const weeks = outline.weeks.slice();

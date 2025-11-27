@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import type { Id } from "./_generated/dataModel";
+import type { Id, Doc } from "./_generated/dataModel";
 
 /** tiny helper */
 function slugify(input: string) {
@@ -266,13 +266,57 @@ export const seedStudentsDays = mutation({
         .first();
     }
 
+    type SeedDayItem = {
+      name: string;
+      sets?: number;
+      reps?: string;
+      time?: string;
+      repsOrTime?: string;
+      rest?: string;
+      tempo?: string;
+      notes?: string;
+    };
+
+    type SeedDayBlock = {
+      type: string;
+      title?: string;
+      items: SeedDayItem[];
+    };
+
+    type SeedDayDoc = {
+      title?: string;
+      focus?: string;
+      blocks: SeedDayBlock[];
+    };
+
+    const normalizeDay = (doc: SeedDayDoc): Pick<Doc<"plan_days">, "title" | "focus" | "blocks"> => ({
+      title: doc.title,
+      focus: doc.focus,
+      blocks: doc.blocks.map((block) => ({
+        type: block.type,
+        items: block.items.map((item) => {
+          const repsOrTime = item.repsOrTime ?? item.reps ?? item.time;
+          const extraNotes = [item.rest ? `Rest: ${item.rest}` : "", item.tempo ? `Tempo: ${item.tempo}` : ""]
+            .filter(Boolean)
+            .join(" • ");
+          return {
+            name: item.name,
+            sets: item.sets,
+            repsOrTime,
+            notes: item.notes ?? (extraNotes || undefined),
+          };
+        }),
+      })),
+    });
+
     // Upsert helper
     async function upsertDay(
       planId: Id<"plans">,
       weekIndex: number,
       dayIndex: number,
-      doc: any,
+      doc: SeedDayDoc,
     ) {
+      const patch = normalizeDay(doc);
       const existing = await ctx.db
         .query("plan_days")
         .withIndex("by_plan_week_day", (q) =>
@@ -280,9 +324,9 @@ export const seedStudentsDays = mutation({
         )
         .first();
       if (existing) {
-        await ctx.db.patch(existing._id, doc);
+        await ctx.db.patch(existing._id, patch);
       } else {
-        await ctx.db.insert("plan_days", { planId, weekIndex, dayIndex, ...doc });
+        await ctx.db.insert("plan_days", { planId, weekIndex, dayIndex, ...patch });
       }
     }
 
