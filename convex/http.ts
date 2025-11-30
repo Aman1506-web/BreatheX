@@ -50,16 +50,20 @@ http.route({
 
     const eventType = evt.type;
 
-    // now if event equal to h user.created ke toh usme se id, first name wagera nikal lo
+    // Handle user.created events from Clerk
     if (eventType === "user.created") {
       const { id, first_name, last_name, image_url, email_addresses } =
         evt.data;
 
-      const email = email_addresses[0].email_address;
-
+      // Some test events may omit email_addresses; guard and bail early.
+      const email = email_addresses?.[0]?.email_address;
       const name = `${first_name || ""} ${last_name || ""}`.trim();
 
-      // then run mutation on it by adding those variables in curly brackets
+      if (!email) {
+        console.error("Clerk webhook missing email in user.created payload");
+        return new Response("Missing email", { status: 400 });
+      }
+
       try {
         await ctx.runMutation(api.users.syncUser, {
           email,
