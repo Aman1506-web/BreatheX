@@ -57,7 +57,14 @@ export default function OurPhilosophy() {
                 loop
                 preload="auto"
                 className="w-full h-full object-contain bg-black transition duration-300"
-                onMouseOver={(e) => e.currentTarget.play()}
+                onMouseOver={(e) => {
+                  const videoEl = e.currentTarget;
+                  if (videoEl.paused) {
+                    videoEl.play().catch(() => {
+                      // ignore interrupted play calls (e.g., quick hover out)
+                    });
+                  }
+                }}
                 onMouseOut={(e) => e.currentTarget.pause()}
               />
               <div className="absolute bottom-4 left-4 right-4 text-white text-base sm:text-lg font-semibold leading-snug whitespace-pre-line drop-shadow">
@@ -81,7 +88,14 @@ export default function OurPhilosophy() {
                 loop
                 preload="auto"
                 className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-                onMouseOver={(e) => e.currentTarget.play()}
+                onMouseOver={(e) => {
+                  const videoEl = e.currentTarget;
+                  if (videoEl.paused) {
+                    videoEl.play().catch(() => {
+                      // ignore interrupted play calls (e.g., quick hover out)
+                    });
+                  }
+                }}
                 onMouseOut={(e) => e.currentTarget.pause()}
               />
               <div className="absolute bottom-4 left-4 right-4 text-white text-base font-semibold leading-snug whitespace-pre-line drop-shadow">

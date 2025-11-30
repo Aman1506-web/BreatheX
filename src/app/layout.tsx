@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import "./globals.css";
 import TopMarquee from "@/components/TopMarquee";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -12,12 +13,14 @@ const geistSans = Geist({
 
 const inter = Inter({ subsets: ["latin"] });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const anton = Anton({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-anton",
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],

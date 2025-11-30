@@ -70,7 +70,14 @@ export default function GenXAISection() {
                 muted
                 playsInline
                 className="w-full h-full object-cover"
-                onMouseOver={(e) => e.currentTarget.play()}
+                onMouseOver={(e) => {
+                  const videoEl = e.currentTarget;
+                  if (videoEl.paused) {
+                    videoEl.play().catch(() => {
+                      // ignore interrupted play calls
+                    });
+                  }
+                }}
                 onMouseOut={(e) => e.currentTarget.pause()}
                 preload="none"
               ></video>
