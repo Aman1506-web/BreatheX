@@ -52,21 +52,30 @@ http.route({
 
     // Handle user.created events from Clerk
     if (eventType === "user.created") {
-      const { id, first_name, last_name, image_url, email_addresses } =
-        evt.data;
+      const {
+        id,
+        first_name,
+        last_name,
+        image_url,
+        email_addresses,
+        primary_email_address_id,
+      } = evt.data;
 
-      // Some test events may omit email_addresses; guard and bail early.
-      const email = email_addresses?.[0]?.email_address;
+      // Try to find the primary email; fall back to first email if present.
+      const primaryEmail =
+        email_addresses?.find((e) => e.id === primary_email_address_id)
+          ?.email_address || email_addresses?.[0]?.email_address;
+
       const name = `${first_name || ""} ${last_name || ""}`.trim();
 
-      if (!email) {
+      if (!primaryEmail) {
         console.error("Clerk webhook missing email in user.created payload");
         return new Response("Missing email", { status: 400 });
       }
 
       try {
         await ctx.runMutation(api.users.syncUser, {
-          email,
+          email: primaryEmail,
           name,
           image: image_url,
           clerkId: id,
