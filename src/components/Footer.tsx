@@ -47,16 +47,17 @@ const columns = [
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white">
-      {/* Top gray line */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+    <footer className="bg-black text-white pt-4">
+      {/* Top separator */}
+      <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      <div className="h-6 w-full bg-gradient-to-b from-white/5 to-transparent" />
 
-      <div className="mx-auto max-w-[1350px] px-6 md:px-8 py-14 md:py-16">
+      <div className="mx-auto max-w-[1350px] px-4 sm:px-6 md:px-8 py-10 sm:py-14 md:py-16">
         {/* Brand + columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 lg:gap-12 items-start">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 sm:gap-10 lg:gap-12 items-start">
           {/* Brand & Contact */}
-          <div>
-            <Link href="/" className="inline-flex items-start">
+          <div className="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-1 text-center sm:text-left">
+            <Link href="/" className="inline-flex items-start mx-auto sm:mx-0">
               <Image
                 src="/BreatheX_logo2.png"
                 alt="BreatheX"
@@ -67,11 +68,11 @@ export default function Footer() {
               />
             </Link>
 
-            <p className="mt-5 max-w-xs text-sm text-white/70 leading-relaxed">
+            <p className="mt-4 sm:mt-5 max-w-xs sm:max-w-xs mx-auto sm:mx-0 text-sm text-white/70 leading-relaxed">
               Join us on our mission to help millions move, breathe and live better with AI-powered training.
             </p>
 
-            <ul className="mt-6 space-y-3 text-sm">
+            <ul className="mt-5 sm:mt-6 space-y-3 text-sm flex flex-col items-center sm:items-start">
               <li className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-white/60" />
                 <a href="mailto:support@breathex.ai" className="hover:underline">
@@ -86,7 +87,7 @@ export default function Footer() {
               </li>
             </ul>
 
-            <div className="mt-6 flex items-center gap-3">
+            <div className="mt-5 sm:mt-6 flex items-center justify-center sm:justify-start gap-3">
               <a
                 aria-label="Instagram"
                 href="https://instagram.com/breathex"
@@ -124,11 +125,11 @@ export default function Footer() {
 
           {/* Navigation columns */}
           {columns.map((col) => (
-            <nav key={col.title} aria-label={col.title}>
-              <h4 className="m-0 text-sm font-semibold tracking-wider text-white/80">
+            <nav key={col.title} aria-label={col.title} className="text-center sm:text-left">
+              <h4 className="m-0 text-sm sm:text-sm font-semibold tracking-wider text-white/80">
                 {col.title.toUpperCase()}
               </h4>
-              <ul className="mt-4 space-y-3 text-sm text-white/70">
+              <ul className="mt-3 sm:mt-4 space-y-2.5 sm:space-y-3 text-sm text-white/70">
                 {col.links.map((l) => (
                   <li key={l.label}>
                     <Link href={l.href} className="hover:text-white transition-colors">
