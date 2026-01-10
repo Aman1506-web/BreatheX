@@ -59,7 +59,7 @@ export default function Footer() {
           <div className="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-1 text-center sm:text-left">
             <Link href="/" className="inline-flex items-start mx-auto sm:mx-0">
               <Image
-                src="/BreatheX_logo2.png"
+                src="/BreatheX_Logo2.png"
                 alt="BreatheX"
                 width={320}
                 height={96}
