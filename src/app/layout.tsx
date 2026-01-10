@@ -4,6 +4,7 @@ import ConvexClerkProvider from "@/providers/ConvexClerkProvider";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 import TopMarquee from "@/components/TopMarquee";
+import { Analytics } from "@vercel/analytics/next"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const geistSans = Geist({
@@ -43,6 +44,7 @@ export default function RootLayout({
           <TopMarquee />
           <Navbar />
           <main className="pt-[100px] min-h-screen">{children}</main>
+          <Analytics />
         </body>
       </html>
     </ConvexClerkProvider>
