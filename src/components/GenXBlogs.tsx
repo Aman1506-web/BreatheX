@@ -82,23 +82,23 @@ const baseClass =
   };
 
   return (
-    <section className="bg-black text-white py-14 md:py-20">
-      <div className="w-full max-w-[1320px] px-6 md:px-8 mx-auto">
+    <section className="bg-black text-white py-12 sm:py-14 md:py-20">
+      <div className="w-full max-w-[1320px] px-4 sm:px-6 md:px-8 mx-auto">
         {/* Top Row: heading left, visit+arrows right */}
-        <div className="flex flex-wrap items-end justify-between gap-y-4 mb-8 md:mb-12">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-7 sm:mb-8 md:mb-12">
           <h2
-            className="text-4xl sm:text-5xl lg:text-6xl leading-[0.95]"
+            className="text-[2.15rem] leading-[1.1] sm:text-5xl lg:text-6xl"
             style={{ fontFamily: "Anton, sans-serif" }}
           >
-            <span className="text-white">UNLEASHED</span>
-            <span className="text-transparent stroke-white ml-2 inline-block">
+            <span className="text-white block sm:inline">UNLEASHED</span>
+            <span className="text-transparent stroke-white sm:ml-2 inline-block">
               BY BREATHEX
             </span>
           </h2>
 
-          <div className="flex items-center gap-4 self-end pb-1">
+          <div className="flex items-center gap-4 sm:self-end sm:pb-1">
             {/* Visit Blog with underline */}
-            <Link href="/blog" className={`${baseClass} text-white`}>
+            <Link href="/blog" className={`${baseClass} text-white text-xs sm:text-sm`}>
               Visit Blog
             </Link>
 
@@ -126,18 +126,18 @@ const baseClass =
         <div className="relative">
           <div
             ref={railRef}
-            className="flex gap-8 lg:gap-10 overflow-x-auto snap-x snap-mandatory scroll-smooth
+            className="flex gap-5 sm:gap-6 lg:gap-10 overflow-x-auto snap-x snap-mandatory scroll-smooth
                        [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {POSTS.map((p, i) => (
               <article
                 key={i}
-                className="snap-start shrink-0 w-[88%] sm:w-[65%] md:w-[32%]"
+                className="snap-start shrink-0 w-[78%] sm:w-[65%] md:w-[32%]"
               >
                 <Link href={p.href} className="block group">
                   {/* Image – rounded, no border */}
                   <div
-                    className="relative aspect-[16/10] rounded-2xl overflow-hidden shadow-xl shadow-black/30
+                    className="relative aspect-[4/3] sm:aspect-[16/10] rounded-2xl overflow-hidden shadow-lg shadow-black/30
                                   transition-transform duration-300 group-hover:scale-[1.01]"
                   >
                     <Image
@@ -151,17 +151,17 @@ const baseClass =
                   </div>
 
                   {/* Copy */}
-                  <div className="pt-5">
-                    <h3 className="text-lg md:text-xl font-semibold leading-snug">
+                  <div className="pt-4 sm:pt-5">
+                    <h3 className="text-base sm:text-lg md:text-xl font-semibold leading-snug">
                       {p.title}
                     </h3>
-                    <p className="mt-3 text-xs md:text-sm text-white/60">
+                    <p className="mt-2 sm:mt-3 text-[11px] sm:text-xs md:text-sm text-white/60">
                       {p.author} · Posted on {p.date}
                     </p>
                     
                   </div>
                   <span
-                      className={`mt-5 inline-block ${baseClass} text-white/80 hover:text-white`}
+                      className={`mt-4 sm:mt-5 inline-block ${baseClass} text-white/80 hover:text-white text-xs sm:text-sm`}
                     >
                       Read More
                     </span>

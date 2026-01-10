@@ -15,24 +15,22 @@ export default function MovingCommunityStrip() {
   // duplicate once for seamless loop (0% -> -50%)
   const items = [...IMAGES, ...IMAGES];
 
-  // keep image + card in perfect squares; tweak one constant to resize all
-  const size = 300; // 300, or 320/340 if you want larger
-
   return (
-    <section className="relative bg-black py-16 overflow-hidden">
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <div className="group flex items-center">
+    <section className="relative bg-black py-14 sm:py-14 md:py-16 overflow-hidden">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 md:px-10">
+        <div className="group flex flex-col gap-6 md:flex-row md:items-center">
           {/* Track (left) fills remaining space; card sits fixed on right */}
           <div className="relative flex-1 overflow-hidden">
             {/* optional fades */}
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-black to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-black to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-14 bg-gradient-to-r from-black to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-14 bg-gradient-to-l from-black to-transparent" />
 
             <ul
               className="
-                flex gap-3
+                flex gap-3 sm:gap-4
                 will-change-transform
                 animate-[marquee_40s_linear_infinite]
+                [animation-duration:10s] md:[animation-duration:40s]
                 group-hover:[animation-play-state:paused]
                 motion-reduce:animate-none
               "
@@ -45,15 +43,14 @@ export default function MovingCommunityStrip() {
               {items.map((src, i) => (
                 <li
                   key={`img-${i}`}
-                  className="relative flex-shrink-0 overflow-hidden rounded-2xl bg-white/5"
-                  style={{ width: size, height: size }}
+                  className="relative flex-shrink-0 overflow-hidden rounded-2xl bg-white/5 w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] lg:w-[300px] lg:h-[300px]"
                 >
                   <Image
                     src={src}
                     alt="Community"
                     fill
                     className="object-cover object-center"
-                    sizes={`${size}px`}
+                    sizes="(max-width: 640px) 220px, (max-width: 1024px) 260px, 300px"
                     priority={i < 4}
                   />
                 </li>
@@ -64,33 +61,33 @@ export default function MovingCommunityStrip() {
           {/* Pinned CTA (right) — identical square size */}
           <div
             className="
-              flex-shrink-0 ml-4 rounded-2xl bg-black text-white
+              flex-shrink-0 rounded-2xl bg-black text-white
               shadow-xl shadow-black/40
               flex flex-col items-center justify-center
+              w-full max-w-[420px] mx-auto
+              md:ml-4 md:w-[300px] md:h-[300px]
             "
-            style={{ width: size, height: size }}
           >
             <h2
-  className="text-4xl sm:text-5xl lg:text-6xl leading-[0.95] flex justify-center flex-wrap"
-  style={{ fontFamily: "Anton, sans-serif" }}
->
-  <span className="text-white">JOIN THE</span>
-  <span
-    className="text-transparent stroke-white ml-2 inline-block mt-1"
-    style={{
-      WebkitTextStroke: "2px white",
-      color: "transparent",
-    }}
-  >
-   FAMILY
-  </span>
-</h2>
+              className="text-[2.2rem] sm:text-5xl lg:text-6xl leading-[0.95] flex justify-center flex-wrap text-center px-4"
+              style={{ fontFamily: "Anton, sans-serif" }}
+            >
+              <span className="text-white block sm:inline">JOIN THE </span>
+              <span
+                className="text-transparent stroke-white sm:ml-2 inline-block lg:[-webkit-text-stroke-width:2px]"
+                style={{
+                  WebkitTextStroke: "1px white",
+                  color: "transparent",
+                }}
+              >
+                &nbsp;FAMILY
+              </span>
+            </h2>
 
-
-            <p className="text-white/85 text-sm md:text-base leading-relaxed text-center mt-3 px-4">
-  Be part of our growing community of fitness enthusiasts &amp; wellness seekers.
-</p>
-
+            <p className="text-white/85 text-sm md:text-base leading-relaxed text-center mt-3 px-5 sm:px-6">
+              Be part of our growing community of fitness enthusiasts &amp;
+              wellness seekers.
+            </p>
 
             <a
               href="https://instagram.com/yourbrand"

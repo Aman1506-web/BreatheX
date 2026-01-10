@@ -94,26 +94,26 @@ export default function HeroCarousel() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-transparent z-10" />
 
           {/* Text Overlay */}
-          <div className="absolute top-[65%] left-6 sm:left-16 transform -translate-y-1/2 z-10 max-w-[90%] sm:max-w-[500px]">
+          <div className="absolute top-[45%] sm:top-[65%] left-6 sm:left-16 transform -translate-y-1/2 z-10 max-w-[90%] sm:max-w-[500px]">
             <h4
-              className="text-sm mb-0.5 font-bold bg-gradient-to-r from-blue-500 via-pink-500 to-orange-400 bg-clip-text text-transparent tracking-wide drop-shadow-[1px_1px_2px_rgba(0,0,0,0.4)] transition
+              className="text-center sm:text-left text-[11px] sm:text-sm mb-1 sm:mb-0.5 font-bold bg-gradient-to-r from-blue-500 via-pink-500 to-orange-400 bg-clip-text text-transparent tracking-wide drop-shadow-[1px_1px_2px_rgba(0,0,0,0.4)] transition
 "
             >
               POWERED BY ARTIFICIAL INTELLIGENCE
             </h4>
 
             <h1
-              className="text-white text-[65px] sm:text-[90px] leading-[1.1] -tracking-normal font-bold mb-4 drop-shadow-[2px_2px_4px_rgba(0,0,0,0.7)] whitespace-pre-line"
+              className="text-center sm:text-left text-white text-[55px] sm:text-[90px] leading-[1.05] sm:leading-[1.1] -tracking-normal font-bold mb-2 sm:mb-4 drop-shadow-[2px_2px_4px_rgba(0,0,0,0.7)] whitespace-pre-line"
               style={{ fontFamily: "Anton, sans-serif" }}
             >
               {slide.headline}
             </h1>
 
-            <p className="text-white text-sm sm:text-base mb-6 drop-shadow-[1px_1px_2px_rgba(0,0,0,0.7)]">
+            <p className="text-center sm:text-left text-white text-base sm:text-lg mb-8 sm:mb-6 drop-shadow-[1px_1px_2px_rgba(0,0,0,0.7)]">
               {slide.subtext}
             </p>
             {/* Buttons */}
-            <div className="flex gap-4">
+            <div className="flex justify-center sm:justify-start gap-4">
               <button className="bg-white text-black px-6 py-2 rounded-full font-semibold hover:bg-gray-200 transition drop-shadow-[1px_1px_2px_rgba(0,0,0,0.5)]
 ">
                 Learn More
@@ -135,8 +135,8 @@ export default function HeroCarousel() {
             setProgressKey={setProgressKey}
           />
 
-          {/* ⬤ Carousel Dots */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+          {/* ⬤ Carousel Dots - REDUCED SIZE & BETTER SPACING */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
             {slides.map((_, index) => (
               <button
                 key={index}
@@ -144,7 +144,7 @@ export default function HeroCarousel() {
                   setCurrentSlide(index); // slide change
                   setProgressKey((prevKey) => prevKey + 1); // reset progress ring
                 }}
-                className={`w-2 h-2 rounded-full transition ${
+                className={`w-1.5 h-1.5 rounded-full transition ${
                   currentSlide === index
                     ? "bg-white scale-110"
                     : "bg-white/40 hover:bg-white/70"
