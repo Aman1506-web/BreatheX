@@ -51,6 +51,8 @@ const plan_days = defineTable({
           name: v.string(), // Exercise name
           sets: v.optional(v.float64()), // Always number
           repsOrTime: v.optional(v.string()), // Flexible string ("12 reps", "3-5 min", etc.)
+          rest: v.optional(v.string()),
+          tempo: v.optional(v.string()),
           notes: v.optional(v.string()), // Extra notes (optional)
         })
       ),

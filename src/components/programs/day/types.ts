@@ -1,6 +1,7 @@
 export type ExerciseItem = {
   name: string;
   sets?: number;
+  repsOrTime?: string;
   reps?: string;       // "10-12" or "30s"
   time?: string;       // alternative to reps
   rest?: string;       // "60s"

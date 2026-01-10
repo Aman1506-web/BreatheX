@@ -12,6 +12,8 @@ export type PlanDayItem = {
   name: string;
   sets: number;
   repsOrTime: string;
+  rest?: string;
+  tempo?: string;
   notes?: string;
 };
 

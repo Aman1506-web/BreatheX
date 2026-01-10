@@ -253,6 +253,8 @@ export const upsertDay = mutation({
             name: v.string(),
             sets: v.float64(),
             repsOrTime: v.string(),
+            rest: v.optional(v.string()),
+            tempo: v.optional(v.string()),
             notes: v.optional(v.string()),
           })
         ),

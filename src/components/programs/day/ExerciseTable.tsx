@@ -21,7 +21,7 @@ export default function ExerciseTable({ items }: { items: ExerciseItem[] }) {
             <tr key={i} className="[&>td]:px-3 [&>td]:py-2 align-top">
               <td className="font-medium">{it.name}</td>
               <td>{it.sets ?? "-"}</td>
-              <td>{it.reps ?? it.time ?? "-"}</td>
+              <td>{it.repsOrTime ?? it.reps ?? it.time ?? "-"}</td>
               <td>{it.rest ?? "-"}</td>
               <td>{it.tempo ?? "-"}</td>
               <td className="text-neutral-600">{it.notes ?? "-"}</td>
