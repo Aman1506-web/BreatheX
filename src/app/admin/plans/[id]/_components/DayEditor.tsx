@@ -81,359 +81,290 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
     setBlocks([...blocks, { type, items: [] }]);
   }
 
-  const blockTypeColors: Record<string, string> = {
-    warmup: "bg-orange-50 border-orange-200",
-    main: "bg-blue-50 border-blue-200",
-    finisher: "bg-purple-50 border-purple-200",
-    pranayama: "bg-green-50 border-green-200",
-    cooldown: "bg-cyan-50 border-cyan-200",
-  };
-
-  const blockTypeBadgeColors: Record<string, string> = {
-    warmup: "bg-orange-100 text-orange-700",
-    main: "bg-blue-100 text-blue-700",
-    finisher: "bg-purple-100 text-purple-700",
-    pranayama: "bg-green-100 text-green-700",
-    cooldown: "bg-cyan-100 text-cyan-700",
+  const blockColors: Record<string, { bg: string; badge: string; border: string }> = {
+    warmup: { bg: "bg-amber-50", badge: "bg-amber-100 text-amber-700 border-amber-200", border: "border-l-amber-500" },
+    main: { bg: "bg-sky-50", badge: "bg-sky-100 text-sky-700 border-sky-200", border: "border-l-sky-500" },
+    finisher: { bg: "bg-rose-50", badge: "bg-rose-100 text-rose-700 border-rose-200", border: "border-l-rose-500" },
+    pranayama: { bg: "bg-emerald-50", badge: "bg-emerald-100 text-emerald-700 border-emerald-200", border: "border-l-emerald-500" },
+    cooldown: { bg: "bg-cyan-50", badge: "bg-cyan-100 text-cyan-700 border-cyan-200", border: "border-l-cyan-500" },
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Header Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900">Day Editor</h1>
-              <p className="text-sm text-slate-500 mt-1">Create and manage workout days</p>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="px-3 py-1.5 bg-slate-100 rounded-lg font-medium text-slate-700">
-                Week {week}
-              </span>
-              <span className="text-slate-400">•</span>
-              <span className="px-3 py-1.5 bg-slate-100 rounded-lg font-medium text-slate-700">
-                Day {day}
-              </span>
-            </div>
-          </div>
-
-          {/* Week/Day Pickers */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="space-y-2">
-              <label htmlFor="day-editor-week" className="block text-sm font-medium text-slate-700">
-                Week Number
-              </label>
+    <div className="space-y-5">
+      {/* Day Selector */}
+      <div className="bg-white rounded-xl border border-neutral-200 p-5">
+        <h3 className="text-sm font-semibold text-neutral-900 mb-3">Select Day to Edit</h3>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-3">
+          <div className="flex gap-3 flex-1">
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-neutral-700 mb-1.5">Week</label>
               <input
-                id="day-editor-week"
                 type="number"
                 value={pendingWeek}
                 onChange={(e) => setPendingWeek(Number(e.target.value))}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className="w-full border border-neutral-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900"
                 min={1}
               />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="day-editor-day" className="block text-sm font-medium text-slate-700">
-                Day Number
-              </label>
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-neutral-700 mb-1.5">Day</label>
               <input
-                id="day-editor-day"
                 type="number"
                 value={pendingDay}
                 onChange={(e) => setPendingDay(Number(e.target.value))}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className="w-full border border-neutral-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900"
                 min={1}
               />
             </div>
-            <div className="space-y-2 md:col-span-1 flex items-end">
-              <button
-                onClick={() => {
-                  setWeek(pendingWeek);
-                  setDay(pendingDay);
-                }}
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg font-semibold transition-all"
-              >
-                Load Day
-              </button>
-            </div>
           </div>
+          <button
+            onClick={() => {
+              setWeek(pendingWeek);
+              setDay(pendingDay);
+            }}
+            className="bg-black hover:bg-neutral-800 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-all sm:whitespace-nowrap"
+          >
+            Load Day
+          </button>
         </div>
-
-        {/* Day Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Day Information</h2>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="day-editor-title" className="block text-sm font-medium text-slate-700">
-                Day Title
-              </label>
-              <input
-                id="day-editor-title"
-                placeholder="e.g., Push Day, Lower Body, Full Body"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-900 placeholder:text-slate-400"
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="day-editor-focus" className="block text-sm font-medium text-slate-700">
-                Primary Focus (Target Muscle / Goal)
-              </label>
-              <input
-                id="day-editor-focus"
-                placeholder="e.g., Chest, Shoulders, Triceps"
-                value={focus}
-                onChange={(e) => setFocus(e.target.value)}
-                className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-900 placeholder:text-slate-400"
-              />
-            </div>
-          </div>
+        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-neutral-100">
+          <span className="text-xs text-neutral-500">Editing:</span>
+          <span className="px-2.5 py-1 bg-neutral-900 text-white rounded-lg text-xs font-semibold">Week {week}</span>
+          <span className="px-2.5 py-1 bg-neutral-900 text-white rounded-lg text-xs font-semibold">Day {day}</span>
         </div>
+      </div>
 
-        {/* Workout Blocks */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Workout Blocks</h2>
-            <span className="text-sm text-slate-500">{blocks.length} block{blocks.length !== 1 ? 's' : ''}</span>
+      {/* Day Info */}
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div className="bg-white rounded-xl border border-neutral-200 p-5">
+          <label className="block text-sm font-semibold text-neutral-900 mb-2">Day Title</label>
+          <input
+            placeholder="e.g., Push Day, Upper Body"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full border border-neutral-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900"
+          />
+        </div>
+        <div className="bg-white rounded-xl border border-neutral-200 p-5">
+          <label className="block text-sm font-semibold text-neutral-900 mb-2">Primary Focus</label>
+          <input
+            placeholder="e.g., Chest, Shoulders, Triceps"
+            value={focus}
+            onChange={(e) => setFocus(e.target.value)}
+            className="w-full border border-neutral-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900"
+          />
+        </div>
+      </div>
+
+      {/* Blocks */}
+      <div className="space-y-4">
+        {blocks.length === 0 && (
+          <div className="bg-white rounded-xl border-2 border-dashed border-neutral-200 p-12 text-center">
+            <p className="text-sm font-medium text-neutral-600 mb-1">No workout blocks added yet</p>
+            <p className="text-xs text-neutral-500">Add a block type below to get started</p>
           </div>
+        )}
 
-          {blocks.length === 0 && (
-            <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-xl">
-              <p className="text-slate-500 mb-2">No blocks added yet</p>
-              <p className="text-sm text-slate-400">Add a block to get started</p>
-            </div>
-          )}
-
-          <div className="space-y-4">
-            {blocks.map((b, i) => (
-              <div key={i} className={`border-2 rounded-xl p-5 transition-all ${blockTypeColors[b.type] || 'bg-slate-50 border-slate-200'}`}>
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <div className="flex items-center gap-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide ${blockTypeBadgeColors[b.type] || 'bg-slate-100 text-slate-700'}`}>
-                      {b.type}
-                    </span>
-                    <span className="text-sm text-slate-500">{b.items.length} exercise{b.items.length !== 1 ? 's' : ''}</span>
-                  </div>
-                  <button
-                    className="text-sm text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all font-medium"
-                    onClick={() => setBlocks(blocks.filter((_, idx) => idx !== i))}
-                  >
-                    Remove Block
-                  </button>
+        {blocks.map((b, i) => {
+          const colors = blockColors[b.type] || { bg: "bg-neutral-50", badge: "bg-neutral-100 text-neutral-700 border-neutral-200", border: "border-l-neutral-400" };
+          return (
+            <div key={i} className={`${colors.bg} rounded-xl border border-neutral-200 ${colors.border} border-l-4 p-5`}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase border ${colors.badge}`}>
+                    {b.type}
+                  </span>
+                  <span className="text-xs text-neutral-500 font-medium">{b.items.length} exercise{b.items.length !== 1 ? 's' : ''}</span>
                 </div>
+                <button
+                  className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all font-medium"
+                  onClick={() => setBlocks(blocks.filter((_, idx) => idx !== i))}
+                >
+                  Remove Block
+                </button>
+              </div>
 
-                {/* Exercise Items */}
-                <div className="space-y-3">
-                  {b.items.map((it, j) => (
-                    <div key={j} className="rounded-lg border border-slate-200 bg-white shadow-sm p-4 hover:shadow-md transition-all">
-                      {/* Exercise Name */}
-                      <div className="grid grid-cols-[120px,1fr,auto] gap-3 items-center mb-3">
-                        <label
-                          htmlFor={`exercise-name-${i}-${j}`}
-                          className="text-xs font-semibold uppercase tracking-wide text-slate-600"
-                        >
-                          Exercise Name
-                        </label>
+              <div className="space-y-3">
+                {b.items.map((it, j) => (
+                  <div key={j} className="border border-neutral-200 rounded-xl p-4 bg-white hover:shadow-sm transition-all">
+                    {/* Exercise Name Row */}
+                    <div className="grid grid-cols-[1fr,auto] gap-3 mb-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-neutral-700 mb-1.5">Exercise Name</label>
                         <input
-                          id={`exercise-name-${i}-${j}`}
-                          placeholder="Exercise name"
+                          placeholder="e.g., Bench Press, Squats"
                           value={it.name}
                           onChange={(e) => {
                             const newBlocks = [...blocks];
                             newBlocks[i].items[j].name = e.target.value;
                             setBlocks(newBlocks);
                           }}
-                          className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                          className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900"
                         />
-                        <button
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-2 rounded-lg transition-all text-sm font-medium"
-                          onClick={() => {
-                            const newBlocks = [...blocks];
-                            newBlocks[i].items = newBlocks[i].items.filter((_, idx) => idx !== j);
-                            setBlocks(newBlocks);
-                          }}
-                        >
-                          Remove
-                        </button>
                       </div>
+                      <button
+                        className="mt-6 text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap"
+                        onClick={() => {
+                          const newBlocks = [...blocks];
+                          newBlocks[i].items = newBlocks[i].items.filter((_, idx) => idx !== j);
+                          setBlocks(newBlocks);
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </div>
 
-                      {/* Sets, Reps, Rest, Tempo in 2x2 Grid */}
-                      <div className="grid md:grid-cols-2 gap-3">
-                        <div className="grid grid-cols-[120px,1fr] gap-3 items-center">
-                          <label
-                            htmlFor={`exercise-sets-${i}-${j}`}
-                            className="text-xs font-semibold uppercase tracking-wide text-slate-600"
-                          >
-                            Sets (Count)
-                          </label>
-                          <input
-                            id={`exercise-sets-${i}-${j}`}
-                            placeholder="3"
-                            value={Number.isNaN(it.sets) ? "" : it.sets}
-                            onChange={(e) => {
-                              const newBlocks = [...blocks];
-                              const val = e.target.value;
-                              const num = Number(val);
-                              newBlocks[i].items[j].sets = Number.isNaN(num) ? 0 : num;
-                              setBlocks(newBlocks);
-                            }}
-                            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-[120px,1fr] gap-3 items-center">
-                          <label
-                            htmlFor={`exercise-reps-${i}-${j}`}
-                            className="text-xs font-semibold uppercase tracking-wide text-slate-600"
-                          >
-                            Reps or Time
-                          </label>
-                          <input
-                            id={`exercise-reps-${i}-${j}`}
-                            placeholder="8-12"
-                            value={it.repsOrTime ?? ""}
-                            onChange={(e) => {
-                              const newBlocks = [...blocks];
-                              newBlocks[i].items[j].repsOrTime = e.target.value;
-                              setBlocks(newBlocks);
-                            }}
-                            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-[120px,1fr] gap-3 items-center">
-                          <label
-                            htmlFor={`exercise-rest-${i}-${j}`}
-                            className="text-xs font-semibold uppercase tracking-wide text-slate-600"
-                          >
-                            Rest (Seconds)
-                          </label>
-                          <input
-                            id={`exercise-rest-${i}-${j}`}
-                            placeholder="45s"
-                            value={it.rest ?? ""}
-                            onChange={(e) => {
-                              const newBlocks = [...blocks];
-                              newBlocks[i].items[j].rest = e.target.value;
-                              setBlocks(newBlocks);
-                            }}
-                            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-[120px,1fr] gap-3 items-center">
-                          <label
-                            htmlFor={`exercise-tempo-${i}-${j}`}
-                            className="text-xs font-semibold uppercase tracking-wide text-slate-600"
-                          >
-                            Tempo (e.g., 2-1-2)
-                          </label>
-                          <input
-                            id={`exercise-tempo-${i}-${j}`}
-                            placeholder="2-1-2"
-                            value={it.tempo ?? ""}
-                            onChange={(e) => {
-                              const newBlocks = [...blocks];
-                              newBlocks[i].items[j].tempo = e.target.value;
-                              setBlocks(newBlocks);
-                            }}
-                            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Notes */}
-                      <div className="grid grid-cols-[120px,1fr] gap-3 items-start mt-3">
-                        <label
-                          htmlFor={`exercise-notes-${i}-${j}`}
-                          className="text-xs font-semibold uppercase tracking-wide text-slate-600 pt-2"
-                        >
-                          Notes / Coaching Cues
-                        </label>
+                    {/* Parameters Grid */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-neutral-700 mb-1.5">Sets</label>
                         <input
-                          id={`exercise-notes-${i}-${j}`}
-                          placeholder="Form cues, effort level, tips"
-                          value={it.notes ?? ""}
+                          placeholder="3"
+                          value={Number.isNaN(it.sets) ? "" : it.sets}
                           onChange={(e) => {
                             const newBlocks = [...blocks];
-                            newBlocks[i].items[j].notes = e.target.value;
+                            const num = Number(e.target.value);
+                            newBlocks[i].items[j].sets = Number.isNaN(num) ? 0 : num;
                             setBlocks(newBlocks);
                           }}
-                          className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                          className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-neutral-700 mb-1.5">Reps/Time</label>
+                        <input
+                          placeholder="8-12"
+                          value={it.repsOrTime ?? ""}
+                          onChange={(e) => {
+                            const newBlocks = [...blocks];
+                            newBlocks[i].items[j].repsOrTime = e.target.value;
+                            setBlocks(newBlocks);
+                          }}
+                          className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-neutral-700 mb-1.5">Rest</label>
+                        <input
+                          placeholder="45s"
+                          value={it.rest ?? ""}
+                          onChange={(e) => {
+                            const newBlocks = [...blocks];
+                            newBlocks[i].items[j].rest = e.target.value;
+                            setBlocks(newBlocks);
+                          }}
+                          className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-neutral-700 mb-1.5">Tempo</label>
+                        <input
+                          placeholder="2-1-2"
+                          value={it.tempo ?? ""}
+                          onChange={(e) => {
+                            const newBlocks = [...blocks];
+                            newBlocks[i].items[j].tempo = e.target.value;
+                            setBlocks(newBlocks);
+                          }}
+                          className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900"
                         />
                       </div>
                     </div>
-                  ))}
-                  <button
-                    className="text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all font-medium w-full border-2 border-dashed border-blue-200 hover:border-blue-300"
-                    onClick={() => {
-                      const newBlocks = [...blocks];
-                      newBlocks[i].items.push({ name: "", sets: 0, repsOrTime: "", rest: "", tempo: "", notes: "" });
-                      setBlocks(newBlocks);
-                    }}
-                  >
-                    + Add Exercise
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
 
-          {/* Add Block Buttons */}
-          <div className="pt-4 border-t border-slate-200">
-            <p className="text-sm font-medium text-slate-700 mb-3">Add Block Type</p>
-            <div className="flex flex-wrap gap-2">
-              {["warmup", "main", "finisher", "pranayama", "cooldown"].map((t) => (
+                    {/* Notes */}
+                    <div>
+                      <label className="block text-xs font-semibold text-neutral-700 mb-1.5">Notes & Form Cues</label>
+                      <input
+                        placeholder="e.g., Keep chest up, control the descent"
+                        value={it.notes ?? ""}
+                        onChange={(e) => {
+                          const newBlocks = [...blocks];
+                          newBlocks[i].items[j].notes = e.target.value;
+                          setBlocks(newBlocks);
+                        }}
+                        className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900"
+                      />
+                    </div>
+                  </div>
+                ))}
+                
                 <button
-                  key={t}
-                  onClick={() => addBlock(t)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all hover:shadow-md ${
-                    blockTypeBadgeColors[t] || 'bg-slate-100 text-slate-700'
-                  } hover:scale-105`}
+                  className="w-full text-sm text-neutral-700 hover:text-neutral-900 hover:bg-white px-4 py-3 rounded-lg border-2 border-dashed border-neutral-300 hover:border-neutral-400 transition-all font-medium bg-white/50"
+                  onClick={() => {
+                    const newBlocks = [...blocks];
+                    newBlocks[i].items.push({ name: "", sets: 0, repsOrTime: "", rest: "", tempo: "", notes: "" });
+                    setBlocks(newBlocks);
+                  }}
                 >
-                  + {t.charAt(0).toUpperCase() + t.slice(1)}
+                  + Add Exercise to {b.type.charAt(0).toUpperCase() + b.type.slice(1)}
                 </button>
-              ))}
+              </div>
             </div>
-          </div>
-        </div>
+          );
+        })}
+      </div>
 
-        {/* Action Buttons */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <div className="flex flex-col md:flex-row gap-3">
-            <button 
-              onClick={handleSave} 
-              disabled={isSaving}
-              className="flex-1 md:flex-none bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSaving ? "Saving..." : "Save Changes"}
-            </button>
-            <button
-              onClick={handleDuplicateNextWeek}
-              className="flex-1 md:flex-none border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-semibold transition-all"
-            >
-              Duplicate to Next Week
-            </button>
-            <button
-              onClick={handleApplyAllWeeks}
-              className="flex-1 md:flex-none border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-semibold transition-all"
-            >
-              Apply to All Weeks
-            </button>
-            {previewHref ? (
-              <Link
-                href={previewHref}
-                className="flex-1 md:flex-none border-2 border-blue-300 hover:border-blue-400 text-blue-700 hover:bg-blue-50 px-6 py-3 rounded-lg font-semibold text-center transition-all"
+      {/* Add Block Buttons */}
+      <div className="bg-white rounded-xl border border-neutral-200 p-5">
+        <h3 className="text-sm font-semibold text-neutral-900 mb-3">Add Workout Block</h3>
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
+          {["warmup", "main", "finisher", "pranayama", "cooldown"].map((t) => {
+            const colors = blockColors[t];
+            return (
+              <button
+                key={t}
+                onClick={() => addBlock(t)}
+                className={`px-6 py-3 rounded-2xl text-sm font-bold border-2 transition-all hover:scale-105 hover:shadow-lg ${colors.badge}`}
               >
-                Preview Day
-              </Link>
+                + {t.charAt(0).toUpperCase() + t.slice(1)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="bg-white rounded-xl border border-neutral-200 p-5">
+        <h3 className="text-sm font-semibold text-neutral-900 mb-3">Actions</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <button 
+            onClick={handleSave} 
+            disabled={isSaving}
+            className="bg-black hover:bg-neutral-800 text-white px-6 py-4 rounded-2xl font-bold text-base transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+          >
+            {isSaving ? (
+              <>
+                <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Saving...
+              </>
             ) : (
-              <span className="flex-1 md:flex-none border-2 border-slate-200 text-slate-400 px-6 py-3 rounded-lg font-semibold text-center">
-                Preview Day
-              </span>
+              "Save Changes"
             )}
-          </div>
+          </button>
+          <button
+            onClick={handleDuplicateNextWeek}
+            className="border-2 border-neutral-300 hover:border-neutral-400 text-neutral-900 hover:bg-neutral-50 px-6 py-4 rounded-2xl text-base font-bold transition-all shadow-sm hover:shadow-md"
+          >
+            Duplicate to Next Week
+          </button>
+          <button
+            onClick={handleApplyAllWeeks}
+            className="border-2 border-neutral-300 hover:border-neutral-400 text-neutral-900 hover:bg-neutral-50 px-6 py-4 rounded-2xl text-base font-bold transition-all shadow-sm hover:shadow-md"
+          >
+            Apply to All Weeks
+          </button>
+          {previewHref ? (
+            <Link
+              href={previewHref}
+              className="border-2 border-neutral-300 hover:border-neutral-400 text-neutral-900 hover:bg-neutral-50 px-6 py-4 rounded-2xl text-base font-bold text-center transition-all shadow-sm hover:shadow-md"
+            >
+              Preview Day
+            </Link>
+          ) : (
+            <span className="border-2 border-neutral-200 text-neutral-400 px-6 py-4 rounded-2xl text-base font-bold text-center cursor-not-allowed">
+              Preview Day
+            </span>
+          )}
         </div>
       </div>
     </div>
