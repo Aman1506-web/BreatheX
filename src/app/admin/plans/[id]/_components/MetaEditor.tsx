@@ -12,14 +12,13 @@ export default function MetaEditor({ planId }: { planId: string }) {
   const updatePlanMeta = useMutation(api.admin.updatePlanMeta);
 
   const [title, setTitle] = useState("");
-  const [subtext, setSubtext] = useState(""); // short line under heading
+  const [subtext, setSubtext] = useState("");
   const [heroImage, setHeroImage] = useState("");
   const [durationWeeks, setDurationWeeks] = useState(4);
   const [workoutsPerWeek, setWorkoutsPerWeek] = useState(4);
   const [minutesPerWorkout, setMinutesPerWorkout] = useState(30);
-  const [description, setDescription] = useState(""); // long description
+  const [description, setDescription] = useState("");
   const [category, setCategory] = useState<Category>("students");
-
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -41,16 +40,7 @@ export default function MetaEditor({ planId }: { planId: string }) {
     try {
       await updatePlanMeta({
         planId: planId as Id<"plans">,
-        patch: {
-          title,
-          subtext,
-          heroImage,
-          durationWeeks,
-          workoutsPerWeek,
-          minutesPerWorkout,
-          description,
-          category,
-        },
+        patch: { title, subtext, heroImage, durationWeeks, workoutsPerWeek, minutesPerWorkout, description, category },
       });
       alert("Meta updated ✅");
     } finally {
@@ -60,13 +50,10 @@ export default function MetaEditor({ planId }: { planId: string }) {
 
   if (plan === undefined) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8 flex items-center justify-center">
+      <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <svg className="animate-spin h-12 w-12 text-blue-600 mx-auto mb-4" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <p className="text-slate-600 font-medium">Loading plan details...</p>
+          <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-neutral-900 mb-3"></div>
+          <p className="text-sm text-neutral-600">Loading plan details...</p>
         </div>
       </div>
     );
@@ -74,244 +61,182 @@ export default function MetaEditor({ planId }: { planId: string }) {
 
   if (plan === null) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8 flex items-center justify-center">
-        <div className="bg-white rounded-xl shadow-lg border border-red-200 p-8 max-w-md">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="flex items-center justify-center py-16">
+        <div className="bg-white rounded-xl border border-neutral-200 p-8 max-w-md text-center">
+          <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg className="w-6 h-6 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <p className="text-red-600 font-semibold text-center text-lg">Plan not found</p>
-          <p className="text-slate-600 text-center text-sm mt-2">The requested plan does not exist or has been deleted.</p>
+          <p className="font-semibold text-neutral-900 mb-1">Plan not found</p>
+          <p className="text-sm text-neutral-600">This plan does not exist or has been deleted</p>
         </div>
       </div>
     );
   }
 
-  const categoryColors: Record<Category, string> = {
-    students: "bg-blue-100 text-blue-700 border-blue-200",
-    housewives: "bg-pink-100 text-pink-700 border-pink-200",
-    professionals: "bg-purple-100 text-purple-700 border-purple-200",
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Plan Metadata</h1>
-            <p className="text-slate-600">Configure basic information and settings for this plan</p>
+    <div className="space-y-6">
+      {/* Hero Image */}
+      <div className="bg-white rounded-xl border border-neutral-200 p-5 sm:p-6">
+        <div className="flex items-start gap-3 mb-4">
+          <div className="w-9 h-9 bg-neutral-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg className="w-5 h-5 text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <label className="block text-sm font-semibold text-neutral-900 mb-1.5">Hero Image</label>
+            <input
+              className="w-full border border-neutral-300 rounded-lg px-3 py-2 sm:px-4 sm:py-2.5 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 transition-all"
+              value={heroImage}
+              onChange={(e) => setHeroImage(e.target.value)}
+              placeholder="https://example.com/image.jpg"
+            />
+            <p className="text-xs text-neutral-500 mt-1.5">Paste an image URL. File upload coming soon.</p>
+          </div>
+        </div>
+
+        {heroImage && (
+          <div className="border border-neutral-200 rounded-lg overflow-hidden bg-neutral-50">
+            <div className="px-3 py-2 bg-neutral-100 border-b border-neutral-200 flex items-center justify-between">
+              <span className="text-xs font-medium text-neutral-600">Preview</span>
+            </div>
+            <div className="relative aspect-video bg-neutral-100">
+              <Image
+                src={heroImage}
+                alt="Hero preview"
+                fill
+                className="object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <div className="hidden absolute inset-0 flex items-center justify-center bg-neutral-100">
+                <div className="text-center text-neutral-400">
+                  <svg className="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  <p className="text-xs">Invalid image URL</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Basic Info & Category */}
+      <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+        <div className="bg-white rounded-xl border border-neutral-200 p-5 sm:p-6 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 mb-1.5">Plan Title</label>
+            <input
+              className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-sm sm:text-base focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 transition-all"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Hybrid Athlete Plan"
+            />
           </div>
 
-          <div className="space-y-8">
-            {/* Hero Image Section */}
-            <div className="bg-slate-50 rounded-xl p-6 border-2 border-slate-200">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <label className="block text-sm font-semibold text-slate-900 mb-2">Plan Hero Image</label>
-                  <input
-                    className="w-full border-2 border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                    value={heroImage}
-                    onChange={(e) => setHeroImage(e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                  />
-                  <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    File upload feature coming soon. For now, paste an image URL.
-                  </p>
-                </div>
-              </div>
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 mb-1.5">Subtext</label>
+            <input
+              className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 transition-all"
+              value={subtext}
+              onChange={(e) => setSubtext(e.target.value)}
+              placeholder="4-week progressive plan"
+            />
+            <p className="text-xs text-neutral-500 mt-1">Short tagline under the title</p>
+          </div>
 
-              {/* Image Preview */}
-              {heroImage && (
-                <div className="mt-4 border-2 border-slate-200 rounded-lg overflow-hidden bg-white">
-                  <div className="p-3 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Preview</span>
-                    <span className="text-xs text-slate-500">Hero Image</span>
-                  </div>
-                  <div className="relative aspect-video bg-slate-100">
-                    <Image
-                      src={heroImage}
-                      alt="Hero preview"
-                      fill
-                      className="object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                    <div className="hidden absolute inset-0 flex items-center justify-center bg-slate-100">
-                      <div className="text-center text-slate-400">
-                        <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        <p className="text-sm">Invalid image URL</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 mb-1.5">Category</label>
+            <select
+              className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 transition-all"
+              value={category}
+              onChange={(e) => setCategory(e.target.value as Category)}
+            >
+              <option value="students">🎓 Students</option>
+              <option value="housewives">🏠 Housewives</option>
+              <option value="professionals">💼 Professionals</option>
+            </select>
+          </div>
+        </div>
 
-            {/* Basic Information */}
-            <div className="space-y-5">
-              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                Basic Information
-              </h2>
-
-              <div className="grid gap-5">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-slate-700">Plan Title</label>
-                  <input
-                    className="w-full border-2 border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-900 font-medium"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Hybrid Athlete Plan"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-slate-700">Subtext</label>
-                  <input
-                    className="w-full border-2 border-slate-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-700"
-                    value={subtext}
-                    onChange={(e) => setSubtext(e.target.value)}
-                    placeholder="4-week progressive plan"
-                  />
-                  <p className="text-xs text-slate-500">A short tagline that appears under the title</p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-slate-700">Target Category</label>
-                  <select
-                    className={`w-full border-2 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-medium ${categoryColors[category]}`}
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value as Category)}
-                  >
-                    <option value="students">🎓 Students</option>
-                    <option value="housewives">🏠 Housewives</option>
-                    <option value="professionals">💼 Professionals</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Program Structure */}
-            <div className="space-y-5">
-              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                Program Structure
-              </h2>
-
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border-2 border-blue-200">
-                  <label className="block text-xs font-semibold text-blue-900 mb-2 uppercase tracking-wide">Duration</label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      className="w-full border-2 border-blue-300 rounded-lg px-3 py-2 text-lg font-bold text-blue-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
-                      value={durationWeeks}
-                      onChange={(e) => setDurationWeeks(Number(e.target.value))}
-                      min={1}
-                    />
-                    <span className="text-sm font-medium text-blue-700 whitespace-nowrap">weeks</span>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border-2 border-green-200">
-                  <label className="block text-xs font-semibold text-green-900 mb-2 uppercase tracking-wide">Frequency</label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      className="w-full border-2 border-green-300 rounded-lg px-3 py-2 text-lg font-bold text-green-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-white"
-                      value={workoutsPerWeek}
-                      onChange={(e) => setWorkoutsPerWeek(Number(e.target.value))}
-                      min={1}
-                      max={7}
-                    />
-                    <span className="text-sm font-medium text-green-700 whitespace-nowrap">days/wk</span>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border-2 border-purple-200">
-                  <label className="block text-xs font-semibold text-purple-900 mb-2 uppercase tracking-wide">Session</label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      className="w-full border-2 border-purple-300 rounded-lg px-3 py-2 text-lg font-bold text-purple-900 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all bg-white"
-                      value={minutesPerWorkout}
-                      onChange={(e) => setMinutesPerWorkout(Number(e.target.value))}
-                      min={5}
-                    />
-                    <span className="text-sm font-medium text-purple-700 whitespace-nowrap">mins</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="space-y-3">
-              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
-                  </svg>
-                </div>
-                About This Plan
-              </h2>
-              <textarea
-                className="w-full border-2 border-slate-300 rounded-lg px-4 py-3 min-h-[140px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-700 leading-relaxed"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="This plan is designed for people who want to gain muscles as well as do running on a regular basis..."
+        <div className="bg-white rounded-xl border border-neutral-200 p-5 sm:p-6">
+          <h3 className="text-sm font-semibold text-neutral-900 mb-4">Program Details</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-neutral-600 mb-1.5">Duration (weeks)</label>
+              <input
+                type="number"
+                className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-base font-semibold focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 transition-all"
+                value={durationWeeks}
+                onChange={(e) => setDurationWeeks(Number(e.target.value))}
+                min={1}
               />
-              <p className="text-xs text-slate-500">Provide a detailed description of the plans goals, target audience, and what participants can expect</p>
             </div>
 
-            {/* Save Button */}
-            <div className="pt-4 border-t border-slate-200">
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="w-full md:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {saving ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Save Changes
-                  </>
-                )}
-              </button>
+            <div>
+              <label className="block text-xs font-medium text-neutral-600 mb-1.5">Workouts per Week</label>
+              <input
+                type="number"
+                className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-base font-semibold focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 transition-all"
+                value={workoutsPerWeek}
+                onChange={(e) => setWorkoutsPerWeek(Number(e.target.value))}
+                min={1}
+                max={7}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-neutral-600 mb-1.5">Minutes per Workout</label>
+              <input
+                type="number"
+                className="w-full border border-neutral-300 rounded-lg px-3 py-2 text-base font-semibold focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 transition-all"
+                value={minutesPerWorkout}
+                onChange={(e) => setMinutesPerWorkout(Number(e.target.value))}
+                min={5}
+              />
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Description */}
+      <div className="bg-white rounded-xl border border-neutral-200 p-5 sm:p-6">
+        <label className="block text-sm font-semibold text-neutral-900 mb-3">About This Plan</label>
+        <textarea
+          className="w-full border border-neutral-300 rounded-lg px-3 py-3 min-h-[120px] text-sm focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 transition-all leading-relaxed resize-none"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Describe the plan's goals, target audience, and what participants can expect..."
+        />
+        <p className="text-xs text-neutral-500 mt-2">Detailed description of the plan</p>
+      </div>
+
+      {/* Save Button */}
+      <div className="flex justify-end">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="bg-black hover:bg-neutral-800 text-white px-6 py-2.5 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
+        >
+          {saving ? (
+            <>
+              <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              Saving...
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Save Changes
+            </>
+          )}
+        </button>
       </div>
     </div>
   );

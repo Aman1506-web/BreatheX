@@ -4,6 +4,8 @@ import DayHeader from "@/components/programs/day/DayHeader";
 import BlockCard from "@/components/programs/day/BlockCard";
 import ExerciseTable from "@/components/programs/day/ExerciseTable";
 import CompleteToggle from "@/components/programs/day/CompleteToggle";
+import MovingCommunityStrip from "@/components/MovingCommunityStrip";
+import Footer from "@/components/Footer";
 import type { DayBlock } from "@/components/programs/day/types";
 import { api } from "@/../convex/_generated/api";
 
@@ -41,17 +43,20 @@ export default async function DayDetailPage({
 
   return (
     <main className="min-h-screen bg-neutral-50">
-      <section className="mx-auto max-w-[1000px] px-4 sm:px-6 md:px-10 lg:px-16 py-10 space-y-8">
+      <section className="mx-auto max-w-[1000px] px-4 sm:px-6 md:px-8 lg:px-10 xl:px-16 py-6 sm:py-8 md:py-10 space-y-6 sm:space-y-8">
         <DayHeader meta={meta} />
         {blocks.map((b, i) => (
           <BlockCard key={i} block={b}>
             <ExerciseTable items={b.items} />
           </BlockCard>
         ))}
-        <div className="flex justify-end">
+        <div className="flex justify-center sm:justify-end">
           <CompleteToggle />
         </div>
       </section>
+
+      <MovingCommunityStrip />
+      <Footer />
     </main>
   );
 }

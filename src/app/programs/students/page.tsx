@@ -2,6 +2,8 @@
 import ProgramsHero from "@/components/programs/ProgramsHero";
 import InfoAlert from "@/components/programs/InfoAlert";
 import PillarsInfoGrid from "@/components/programs/PillarsInfoGrid";
+import MovingCommunityStrip from "@/components/MovingCommunityStrip";
+import Footer from "@/components/Footer";
 
 import {
   Dumbbell,
@@ -17,6 +19,7 @@ import { fetchQuery } from "convex/nextjs";
 // NOTE: relative path from src/app/programs/students → project root /convex
 import { api } from "../../../../convex/_generated/api";
 import Image from "next/image";
+
 
 export default async function StudentsPage() {
   const plans = await fetchQuery(api.plans.getPlansByCategory, {
@@ -40,7 +43,7 @@ export default async function StudentsPage() {
         overlayStrength={1}
       />
 
-      <section className="mx-auto max-w-[1200px] px-4 sm:px-6 md:px-10 lg:px-16 py-10 space-y-8">
+      <section className="mx-auto max-w-[1200px] px-5 sm:px-6 md:px-10 lg:px-16 py-8 sm:py-10 space-y-6 sm:space-y-8">
         {/* 2) MEDICAL DISCLAIMER (RED) */}
         <InfoAlert
           tone="danger"
@@ -52,40 +55,54 @@ export default async function StudentsPage() {
         />
 
         {/* ⭐ FEATURED PLANS (Convex) */}
-        <section className="space-y-3">
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+        <section className="space-y-3 sm:space-y-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">
             Featured Plans for Students
           </h2>
-          <p className="text-neutral-600">
+          <p className="text-sm sm:text-base text-neutral-600 max-w-2xl">
             Short, effective programs designed around study schedules.
           </p>
 
-          <div className="grid gap-6 sm:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 pt-2">
             {plans.map((p) => (
               <Link
                 key={p._id}
                 href={`/programs/students/plans/${p.slug}`}
-                className="rounded-2xl border bg-white overflow-hidden hover:shadow-sm transition"
+                className="group rounded-xl sm:rounded-2xl border bg-white overflow-hidden 
+                           hover:shadow-lg hover:border-neutral-300
+                           active:scale-[0.98] transition-all duration-200"
               >
-                <div className="aspect-[16/9] bg-neutral-200 relative">
+                <div className="aspect-[4/3] sm:aspect-[16/9] bg-neutral-200 relative overflow-hidden">
                   <Image
                     src={p.heroImage || "/placeholder.jpg"}
                     alt={p.title}
                     fill
-                    className="object-cover"
-                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(min-width: 640px) 50vw, 100vw"
                   />
                 </div>
 
-                <div className="p-4">
-                  <h3 className="text-lg font-medium">{p.title}</h3>
-                  <p className="text-sm text-neutral-500">
-                    {p.durationWeeks} weeks • {p.workoutsPerWeek}x/week • ~
-                    {p.minutesPerWorkout} min
+                <div className="p-4 sm:p-5 space-y-2">
+                  <h3 className="text-base sm:text-lg font-semibold line-clamp-2 
+                                 group-hover:text-neutral-700 transition-colors">
+                    {p.title}
+                  </h3>
+                  
+                  <p className="text-xs sm:text-sm text-neutral-500 flex flex-wrap gap-x-2 gap-y-1">
+                    <span className="whitespace-nowrap">{p.durationWeeks} weeks</span>
+                    <span className="hidden xs:inline">•</span>
+                    <span className="whitespace-nowrap">{p.workoutsPerWeek}x/week</span>
+                    <span className="hidden xs:inline">•</span>
+                    <span className="whitespace-nowrap">~{p.minutesPerWorkout} min</span>
                   </p>
-                  <span className="mt-2 inline-block text-xs rounded bg-black text-white px-2 py-1">
-                    {p.accessTier.toUpperCase()}
-                  </span>
+
+                  <div className="pt-1">
+                    <span className="inline-block text-[10px] sm:text-xs rounded-md 
+                                   bg-black text-white px-2.5 py-1 font-medium
+                                   tracking-wide">
+                      {p.accessTier.toUpperCase()}
+                    </span>
+                  </div>
                 </div>
               </Link>
             ))}
@@ -94,7 +111,7 @@ export default async function StudentsPage() {
 
         {/* 3) WHY BOX (icons + text) */}
         <PillarsInfoGrid
-          heading="Why these pillars matter in a student’s life"
+          heading="Why these pillars matter in a student's life"
           items={[
             {
               icon: <Dumbbell className="h-5 w-5" />,
@@ -104,7 +121,7 @@ export default async function StudentsPage() {
             {
               icon: <HeartPulse className="h-5 w-5" />,
               title: "Cardio",
-              text: "Improves stamina and brain blood-flow. You don’t ‘lose study time’—you gain focus and energy.",
+              text: "Improves stamina and brain blood-flow. You don't 'lose study time'—you gain focus and energy.",
             },
             {
               icon: <Wind className="h-5 w-5" />,
@@ -163,7 +180,7 @@ export default async function StudentsPage() {
                   ],
                 },
                 {
-                  title: "Beat Exam Stress • Don’t Compromise Muscle",
+                  title: "Beat Exam Stress • Don't Compromise Muscle",
                   cards: [
                     {
                       title: "Low-stress Strength • 3 days/wk",
@@ -248,7 +265,11 @@ export default async function StudentsPage() {
             },
           ]}
         /> */}
+
       </section>
+
+      <MovingCommunityStrip />
+      <Footer />
     </main>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/../convex/_generated/api";
 import Link from "next/link";
@@ -10,6 +10,8 @@ import type { PlanDay, PlanDayBlock } from "@/types/plans";
 export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
   const [week, setWeek] = useState(1);
   const [day, setDay] = useState(1);
+  const [pendingWeek, setPendingWeek] = useState(1);
+  const [pendingDay, setPendingDay] = useState(1);
 
   const dayData = useQuery(api.admin.getDay, { planId: planId as Id<"plans">, weekIndex: week, dayIndex: day }) as PlanDay | null;
   const plan = useQuery(api.plans.getPlanById, { planId: planId as Id<"plans"> });
@@ -22,8 +24,13 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
   const [blocks, setBlocks] = useState<PlanDayBlock[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Sync fetched data → local state
-  if (dayData && blocks.length === 0 && dayData.blocks) {
+  useEffect(() => {
+    if (!dayData) {
+      setTitle("");
+      setFocus("");
+      setBlocks([]);
+      return;
+    }
     setTitle(dayData.title ?? "");
     setFocus(dayData.focus ?? "");
     setBlocks(
@@ -39,7 +46,7 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
         })),
       }))
     );
-  }
+  }, [dayData, week, day]);
 
   async function handleSave() {
     setIsSaving(true);
@@ -112,26 +119,43 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
           </div>
 
           {/* Week/Day Pickers */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-700">Week Number</label>
+              <label htmlFor="day-editor-week" className="block text-sm font-medium text-slate-700">
+                Week Number
+              </label>
               <input
+                id="day-editor-week"
                 type="number"
-                value={week}
-                onChange={(e) => setWeek(Number(e.target.value))}
+                value={pendingWeek}
+                onChange={(e) => setPendingWeek(Number(e.target.value))}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 min={1}
               />
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-700">Day Number</label>
+              <label htmlFor="day-editor-day" className="block text-sm font-medium text-slate-700">
+                Day Number
+              </label>
               <input
+                id="day-editor-day"
                 type="number"
-                value={day}
-                onChange={(e) => setDay(Number(e.target.value))}
+                value={pendingDay}
+                onChange={(e) => setPendingDay(Number(e.target.value))}
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 min={1}
               />
+            </div>
+            <div className="space-y-2 md:col-span-1 flex items-end">
+              <button
+                onClick={() => {
+                  setWeek(pendingWeek);
+                  setDay(pendingDay);
+                }}
+                className="w-full bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg font-semibold transition-all"
+              >
+                Load Day
+              </button>
             </div>
           </div>
         </div>
@@ -141,8 +165,11 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Day Information</h2>
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-700">Day Title</label>
+              <label htmlFor="day-editor-title" className="block text-sm font-medium text-slate-700">
+                Day Title
+              </label>
               <input
+                id="day-editor-title"
                 placeholder="e.g., Push Day, Lower Body, Full Body"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -150,8 +177,11 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
               />
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-700">Primary Focus</label>
+              <label htmlFor="day-editor-focus" className="block text-sm font-medium text-slate-700">
+                Primary Focus (Target Muscle / Goal)
+              </label>
               <input
+                id="day-editor-focus"
                 placeholder="e.g., Chest, Shoulders, Triceps"
                 value={focus}
                 onChange={(e) => setFocus(e.target.value)}
@@ -199,8 +229,14 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
                     <div key={j} className="rounded-lg border border-slate-200 bg-white shadow-sm p-4 hover:shadow-md transition-all">
                       {/* Exercise Name */}
                       <div className="grid grid-cols-[120px,1fr,auto] gap-3 items-center mb-3">
-                        <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">Exercise</label>
+                        <label
+                          htmlFor={`exercise-name-${i}-${j}`}
+                          className="text-xs font-semibold uppercase tracking-wide text-slate-600"
+                        >
+                          Exercise Name
+                        </label>
                         <input
+                          id={`exercise-name-${i}-${j}`}
                           placeholder="Exercise name"
                           value={it.name}
                           onChange={(e) => {
@@ -225,8 +261,14 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
                       {/* Sets, Reps, Rest, Tempo in 2x2 Grid */}
                       <div className="grid md:grid-cols-2 gap-3">
                         <div className="grid grid-cols-[120px,1fr] gap-3 items-center">
-                          <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">Sets</label>
+                          <label
+                            htmlFor={`exercise-sets-${i}-${j}`}
+                            className="text-xs font-semibold uppercase tracking-wide text-slate-600"
+                          >
+                            Sets (Count)
+                          </label>
                           <input
+                            id={`exercise-sets-${i}-${j}`}
                             placeholder="3"
                             value={Number.isNaN(it.sets) ? "" : it.sets}
                             onChange={(e) => {
@@ -241,8 +283,14 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
                         </div>
 
                         <div className="grid grid-cols-[120px,1fr] gap-3 items-center">
-                          <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">Reps/Time</label>
+                          <label
+                            htmlFor={`exercise-reps-${i}-${j}`}
+                            className="text-xs font-semibold uppercase tracking-wide text-slate-600"
+                          >
+                            Reps or Time
+                          </label>
                           <input
+                            id={`exercise-reps-${i}-${j}`}
                             placeholder="8-12"
                             value={it.repsOrTime ?? ""}
                             onChange={(e) => {
@@ -255,8 +303,14 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
                         </div>
 
                         <div className="grid grid-cols-[120px,1fr] gap-3 items-center">
-                          <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">Rest</label>
+                          <label
+                            htmlFor={`exercise-rest-${i}-${j}`}
+                            className="text-xs font-semibold uppercase tracking-wide text-slate-600"
+                          >
+                            Rest (Seconds)
+                          </label>
                           <input
+                            id={`exercise-rest-${i}-${j}`}
                             placeholder="45s"
                             value={it.rest ?? ""}
                             onChange={(e) => {
@@ -269,8 +323,14 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
                         </div>
 
                         <div className="grid grid-cols-[120px,1fr] gap-3 items-center">
-                          <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">Tempo</label>
+                          <label
+                            htmlFor={`exercise-tempo-${i}-${j}`}
+                            className="text-xs font-semibold uppercase tracking-wide text-slate-600"
+                          >
+                            Tempo (e.g., 2-1-2)
+                          </label>
                           <input
+                            id={`exercise-tempo-${i}-${j}`}
                             placeholder="2-1-2"
                             value={it.tempo ?? ""}
                             onChange={(e) => {
@@ -285,8 +345,14 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
 
                       {/* Notes */}
                       <div className="grid grid-cols-[120px,1fr] gap-3 items-start mt-3">
-                        <label className="text-xs font-semibold uppercase tracking-wide text-slate-600 pt-2">Notes</label>
+                        <label
+                          htmlFor={`exercise-notes-${i}-${j}`}
+                          className="text-xs font-semibold uppercase tracking-wide text-slate-600 pt-2"
+                        >
+                          Notes / Coaching Cues
+                        </label>
                         <input
+                          id={`exercise-notes-${i}-${j}`}
                           placeholder="Form cues, effort level, tips"
                           value={it.notes ?? ""}
                           onChange={(e) => {

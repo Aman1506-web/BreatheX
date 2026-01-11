@@ -14,9 +14,9 @@ import { useEffect, useState } from "react";
 
 const navItems = [
   { name: "Home", href: "/" },
-  { name: "Programs", href: "/programs" },
+  { name: "Programs", href: "/programs/students" },
   { name: "Shop", href: "/shop" },
-  { name: "Community", href: "/community" },
+  // { name: "Community", href: "/community" },
   { name: "Profile", href: "/profile" },
   { name: "Pricing", href: "/pricing" },
 ];
@@ -29,18 +29,18 @@ const PROGRAMS = [
     Icon: GraduationCap,
     sub: "Study‑friendly workouts + stress‑relief pranayama",
   },
-  {
-    name: "Housewives",
-    href: "/programs/housewives",
-    Icon: Home,
-    sub: "Home‑friendly routines for energy, mobility & balance",
-  },
-  {
-    name: "Working Professionals",
-    href: "/programs/professionals",
-    Icon: Briefcase,
-    sub: "Efficient 30‑min plans + desk‑strain relief",
-  },
+  // {
+  //   name: "Housewives",
+  //   href: "/programs/housewives",
+  //   Icon: Home,
+  //   sub: "Home‑friendly routines for energy, mobility & balance",
+  // },
+  // {
+  //   name: "Working Professionals",
+  //   href: "/programs/professionals",
+  //   Icon: Briefcase,
+  //   sub: "Efficient 30‑min plans + desk‑strain relief",
+  // },
 ];
 
 export default function Navbar() {
@@ -291,4 +291,3 @@ const underlineClass = isGenXAI
 )}
 ---------------------------------------------
 */
-
