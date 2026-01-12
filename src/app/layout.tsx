@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Anton } from "next/font/google";
 import ConvexClerkProvider from "@/providers/ConvexClerkProvider";
+import { CartProvider } from "@/contexts/CartContext";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 import TopMarquee from "@/components/TopMarquee";
@@ -39,14 +40,19 @@ export default function RootLayout({
 }>) {
   return (
     <ConvexClerkProvider>
-      <html lang="en">
-        <body className={`${inter.className} bg-background text-foreground overflow-x-hidden overscroll-y-none`}>
-          <TopMarquee />
-          <Navbar />
-          <main className="pt-[100px] min-h-screen">{children}</main>
-          <Analytics />
-        </body>
-      </html>
+      <CartProvider>
+        <html lang="en">
+          <head>
+            <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
+          </head>
+          <body className={`${inter.className} bg-background text-foreground overflow-x-hidden overscroll-y-none`}>
+            <TopMarquee />
+            <Navbar />
+            <main className="pt-[100px] min-h-screen">{children}</main>
+            <Analytics />
+          </body>
+        </html>
+      </CartProvider>
     </ConvexClerkProvider>
   );
 }

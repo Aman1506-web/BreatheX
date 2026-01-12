@@ -163,7 +163,7 @@ function GenerateForm({
           })),
         })),
       });
-    } catch (error) {
+    } catch {
       alert("Error generating outline. Please try again.");
     } finally {
       setIsGenerating(false);
