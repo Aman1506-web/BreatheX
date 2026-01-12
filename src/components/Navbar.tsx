@@ -8,9 +8,11 @@ import { usePathname } from "next/navigation";
 import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import {
   ShoppingBag, Menu, X, Heart,
-  GraduationCap, Home, Briefcase, ChevronRight, ChevronDown
+  GraduationCap, ChevronRight, ChevronDown
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCart } from "@/contexts/CartContext";
+import CartSidebar from "@/components/shop/CartSidebar";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -47,6 +49,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mobileProgramsOpen, setMobileProgramsOpen] = useState(false); // 👈 accordion
+  const { isCartOpen, openCart, closeCart, itemCount } = useCart();
 
   // hydration-safe
   const [mounted, setMounted] = useState(false);
@@ -168,16 +171,24 @@ export default function Navbar() {
             className={`w-5 h-5 transition ${isDarkRoute ? "text-white hover:opacity-80" : "text-black hover:text-primary"}`}
           />
         </Link>
-        <Link href="/shop/cart" className="text-xl" aria-label="Cart">
+        <button onClick={openCart} className="relative" aria-label="Cart">
           <ShoppingBag
             className={`w-5 h-5 transition ${isDarkRoute ? "text-white hover:opacity-80" : "text-black hover:text-primary"}`}
           />
-        </Link>
+          {itemCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-[#FFD700] text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {itemCount}
+            </span>
+          )}
+        </button>
         <SignedIn><UserButton /></SignedIn>
         <SignedOut>
           <Link href="/sign-in" className={`text-sm font-medium ${isDarkRoute ? "text-white" : "text-black"}`}>Sign In</Link>
         </SignedOut>
       </div>
+
+      {/* Cart Sidebar */}
+      <CartSidebar isOpen={isCartOpen} onClose={closeCart} />
 
       {/* 📱 Mobile Drawer */}
       {isMobileMenuOpen && (
@@ -245,9 +256,10 @@ export default function Navbar() {
             <Link href="/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2">
               <Heart className="w-5 h-5" /> <span>Wishlist</span>
             </Link>
-            <Link href="/shop/cart" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5" /> <span>Cart</span>
-            </Link>
+            <button onClick={() => { openCart(); setIsMobileMenuOpen(false); }} className="flex items-center gap-2">
+              <ShoppingBag className="w-5 h-5" />
+              <span>Cart ({itemCount})</span>
+            </button>
           </div>
         </div>
       )}

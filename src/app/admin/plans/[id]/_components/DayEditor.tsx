@@ -53,7 +53,7 @@ export default function DayEditor({ planId }: { planId: Id<"plans"> }) {
     try {
       await saveDay({ planId: planId as Id<"plans">, weekIndex: week, dayIndex: day, title, focus, blocks });
       alert("Saved ✅");
-    } catch (error) {
+    } catch {
       alert("Error saving. Please try again.");
     } finally {
       setIsSaving(false);

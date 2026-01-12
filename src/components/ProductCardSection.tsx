@@ -1,12 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 export default function ProductCardSection() {
   const [quantity, setQuantity] = useState(1);
   const sizes = ["X-SMALL", "SMALL", "MEDIUM", "LARGE", "X-LARGE", "XX-LARGE"];
-  const [selectedSize, setSelectedSize] = useState("UK 06");
+  const [selectedSize, setSelectedSize] = useState("MEDIUM");
+  const { addToCart, openCart } = useCart();
 
   const thumbnails = [
     "/images/shorts1.jpg",
@@ -15,6 +18,35 @@ export default function ProductCardSection() {
     "/images/shorts4.jpg",
   ];
   const [selectedImage, setSelectedImage] = useState(thumbnails[0]);
+
+  // Product details
+  const product = {
+    id: "31",
+    name: "BREATHEX GYM SHORTS - BLACK/WHITE",
+    slug: "breathex-gym-shorts-black-white",
+    price: 650,
+    originalPrice: 1500,
+    image: "/images/shorts1.jpg",
+  };
+
+  const handleAddToCart = async () => {
+    const discountPercentage = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+
+    for (let i = 0; i < quantity; i++) {
+      await addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        originalPrice: product.originalPrice,
+        image: product.image,
+        size: selectedSize,
+        discount: discountPercentage,
+        slug: product.slug,
+      });
+    }
+
+    openCart();
+  };
 
   return (
     <section className="bg-white py-8 md:py-16 flex justify-center">
@@ -78,7 +110,7 @@ export default function ProductCardSection() {
 
             {/* Title - SMALLER ON MOBILE */}
             <h3 className="text-xl md:text-2xl font-light leading-snug">
-              BREATHEX GYM SHORTS - BLACK/WHITE
+              {product.name}
             </h3>
 
             {/* Brand */}
@@ -88,8 +120,8 @@ export default function ProductCardSection() {
 
             {/* Price Section - COMPACT ON MOBILE */}
             <div className="text-base md:text-lg space-x-2 md:space-x-3 -mt-1 md:-mt-0">
-              <span className="line-through text-gray-400">₹1500</span>
-              <span className="text-red-700 font-semibold">₹650</span>
+              <span className="line-through text-gray-400">₹{product.originalPrice}</span>
+              <span className="text-red-700 font-semibold">₹{product.price}</span>
               <span className="text-blue-700 font-semibold">42% OFF</span>
               <span className="text-xs text-gray-500">TAXES INCLUDED</span>
             </div>
@@ -137,7 +169,10 @@ export default function ProductCardSection() {
               </div>
 
               {/* Add to Cart Button - COMPACT ON MOBILE */}
-              <button className="bg-black w-full text-white px-4 sm:px-8 md:px-12 py-2 sm:py-2.5 h-9 sm:h-10 rounded-full hover:bg-white hover:text-black border border-black transition-all duration-300 text-xs sm:text-sm font-light cursor-pointer">
+              <button
+                onClick={handleAddToCart}
+                className="bg-black w-full text-white px-4 sm:px-8 md:px-12 py-2 sm:py-2.5 h-9 sm:h-10 rounded-full hover:bg-white hover:text-black border border-black transition-all duration-300 text-xs sm:text-sm font-light cursor-pointer"
+              >
                 Add to Cart
               </button>
             </div>
@@ -148,9 +183,11 @@ export default function ProductCardSection() {
             </button>
 
             {/* View Product Link - SMALLER ON MOBILE */}
-            <button className="text-xs sm:text-sm text-black underline underline-offset-4 hover:opacity-70 font-light cursor-pointer -mt-1 md:-mt-0">
-              View Product
-            </button>
+            <Link href={`/shop/products/${product.slug}`}>
+              <button className="text-xs sm:text-sm text-black underline underline-offset-4 hover:opacity-70 font-light cursor-pointer -mt-1 md:-mt-0">
+                View Product
+              </button>
+            </Link>
           </div>
         </div>
       </div>
