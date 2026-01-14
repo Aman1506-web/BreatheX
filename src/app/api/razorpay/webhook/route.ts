@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../../convex/_generated/api";
-import { sendOrderConfirmationEmail } from "@/lib/email";
+import { sendOrderConfirmationEmail, sendPaymentFailureEmail } from "@/lib/email";
 
 // Initialize Convex client
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
@@ -256,6 +256,11 @@ async function handlePaymentFailed(payment: PaymentEntity) {
     const errorDescription =
       payment.error_description || "Payment failed without error description";
 
+    // Find order in database to get user email
+    const order = await convex.query(api.orders.getOrderByRazorpayId, {
+      razorpayOrderId: payment.order_id,
+    });
+
     // Mark order as failed
     await convex.mutation(api.orders.markOrderFailed, {
       razorpayOrderId: payment.order_id,
@@ -264,7 +269,15 @@ async function handlePaymentFailed(payment: PaymentEntity) {
 
     console.log(`Order marked as failed: ${payment.order_id}`);
 
-    // TODO: Send payment failure notification email
+    // Send payment failure notification email
+    if (order) {
+      await sendPaymentFailureEmail(
+        order.userEmail,
+        order.orderNumber,
+        errorDescription
+      );
+      console.log(`Payment failure email sent to ${order.userEmail}`);
+    }
   } catch (error) {
     console.error("Error handling payment.failed:", error);
     throw error;
