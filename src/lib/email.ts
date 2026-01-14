@@ -68,7 +68,7 @@ async function sendEmail({ to, subject, html }: EmailOptions): Promise<boolean> 
     const resend = new Resend(apiKey);
 
     const { data, error } = await resend.emails.send({
-      from: "BreatheX <onboarding@resend.dev>", // Replace with your verified domain
+      from: "BreatheX <noreply@breathex.co.in>", // Using verified domain
       to: [to],
       subject: subject,
       html: html,
@@ -260,7 +260,7 @@ function generateOrderConfirmationEmail(order: Order): string {
           <!-- Call to Action -->
           <tr>
             <td style="padding: 0 40px 40px; text-align: center;">
-              <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://breathex.com"}/orders/${order.orderNumber}"
+              <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://breathex.co.in"}/orders/${order.orderNumber}"
                 style="display: inline-block; background-color: #000000; color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: 700; font-size: 16px;">
                 View Order Details
               </a>
